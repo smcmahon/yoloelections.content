@@ -1,0 +1,119 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="plone">
+<body>
+
+<metal:content-core fill-slot="content-core">
+    <metal:content-core define-macro="content-core">
+        <style>
+            table.cfilings td, table.cfilings th {
+            }
+            table.cfilings h2 {
+                margin-top: 0.5em;
+                border-top: 4px solid black;
+            }
+            table.cfilings h3 {
+                border-top: 1px solid black;
+                background-color: #ccc;
+                margin-top: 0.5em;
+            }
+            table.cfilings h4 {
+                font-size: 1em;
+                margin-top: 0.5em;
+            }
+            table.cfilings tr.headers {
+                background-color: #ccc;
+                line-height: 100%;
+            }
+            table.cfilings tr.candidate {
+                border-top: 1px solid black;
+            }
+            table.cfilings tr.candidate  td{
+                vertical-align: top;
+            }
+            table.cfilings tr.candidate td {
+                line-height: 120%;
+            }
+        </style>
+        <table class="cfilings" tal:define="toLocalizedTime nocall: context/@@plone/toLocalizedTime;">
+            <tal:cblock tal:repeat="category view/getFilings">
+                <tr>
+                    <th colspan="8">
+                        <h2 tal:content="python:category[0]" />
+                    </th>
+                </tr>
+                <tal:oblock tal:repeat="office python:category[1]">
+                    <tr class="office">
+                        <th colspan="8">
+                            <h3 tal:content="python:office[0]" />
+                        </th>
+                    </tr>
+                    <tr class="headers">
+                          <td>Candidate</td>
+                          <td><small>Party<br/>Affiliation&nbsp;</small></td>
+                          <td><small>County of Residence&nbsp;</small></td>
+                          <td><small>In Lieu Sigs&nbsp;</small></td>
+                          <td colspan="2" style="text-align:center"><small>Nomination Papers&nbsp;</small></td>
+                          <td><small>Dec. of Candidacy&nbsp;</small></td>
+                          <td><small>Misc.</small></td>
+                    </tr>
+                    <tr class="headers" style="font-size:80%; line-height:100%">
+                      <td>&nbsp;</td>
+                      <td><small>Partisan<br />Ofcs Only&nbsp;</small></td>
+                      <td>&nbsp;</td>
+                      <td><small>Date Filed&nbsp;</small></td>
+                      <td><small>Date Taken&nbsp;</small></td>
+                      <td><small>Date Filed&nbsp;</small></td>
+                      <td><small>Date Filed&nbsp;</small></td>
+                      <td>&nbsp;</td>
+                    </tr>
+                    <tr class="candidate" tal:repeat="candidate python:office[1]">
+                        <td>
+                            <div style="font-weight:bold" tal:content="candidate/title" />
+                            <div style="font-style:italic" tal:content="candidate/ballot_designation" />
+                            <div tal:condition="candidate/contact_email">
+                                <a tal:attributes="href string:mailto:candidate/contact_email"
+                                   tal:content="candidate/contact_email"
+                                   />
+                           </div>
+                            <div
+                                tal:condition="candidate/contact_phone"
+                                tal:content="candidate/contact_phone"
+                                />
+                            <div style="white-space:pre-line"
+                                tal:condition="candidate/contact_address"
+                                tal:content="candidate/contact_address"
+                                />
+                        </td>
+                        <td tal:content="python:candidate.party or 'n/a'" />
+                        <td tal:content="candidate/county_of_residence" />
+                        <td
+                            tal:condition="candidate/sig_in_lieu_filed"
+                            tal:content="python:candidate.sig_in_lieu_filed.strftime('%m/%d')"
+                            />
+                        <td
+                            tal:condition="candidate/nom_papers_taken"
+                            tal:content="python:candidate.nom_papers_taken.strftime('%m/%d')"
+                            />
+                        <td
+                            tal:condition="candidate/nom_papers_filed"
+                            tal:content="python:candidate.nom_papers_filed.strftime('%m/%d')"
+                            />
+                        <td
+                            tal:condition="candidate/doc_filed"
+                            tal:content="python:candidate.doc_filed.strftime('%m/%d')"
+                            />
+                        <td tal:content="candidate/miscellaneous" />
+                    </tr>
+                </tal:oblock>
+            </tal:cblock>
+        </table>
+    </metal:content-core>
+</metal:content-core>
+
+</body>
+</html>
