@@ -10,16 +10,19 @@
 <metal:content-core fill-slot="content-core">
     <metal:content-core define-macro="content-core">
         <style>
+            table.cfilings {
+                width: 100%;
+            }
             table.cfilings td, table.cfilings th {
+                padding: 4px 6px 0 0;
             }
             table.cfilings h2 {
                 margin-top: 0.5em;
                 border-top: 4px solid black;
             }
-            table.cfilings h3 {
+            table.cfilings tr.office {
                 border-top: 1px solid black;
                 background-color: #ccc;
-                margin-top: 0.5em;
             }
             table.cfilings h4 {
                 font-size: 1em;
@@ -41,7 +44,7 @@
         </style>
         <table class="cfilings" tal:define="toLocalizedTime nocall: context/@@plone/toLocalizedTime;">
             <tal:cblock tal:repeat="category view/getFilings">
-                <tr>
+                <tr class="category">
                     <th colspan="8">
                         <h2 tal:content="python:category[0]" />
                     </th>
