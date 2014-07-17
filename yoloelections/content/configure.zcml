@@ -36,6 +36,14 @@
     template="filings.pt"
     />
 
+  <browser:page
+      for="*"
+      name="extract_metadata"
+      class=".emetadata.ExtractMetadata"
+      permission="zope.Public"
+      allowed_attributes="extract"
+  />
+
   <browser:resourceDirectory
       name="yoloelections.content.resources"
       directory="resources"
