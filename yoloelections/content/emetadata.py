@@ -11,11 +11,15 @@ class ExtractMetadata(BrowserView):
     """ extract data from meta tags in body """
 
     def __init__(self, context, request):
-        self.mdict = dict(mpat.findall(aq_inner(context).getText()))
+        getText = getattr(aq_inner(context), 'getText', None)
+        if getText is not None:
+            self.mdict = dict(mpat.findall(aq_inner(context).getText()))
+        else:
+            self.mdict = {}
 
     def extract(self, id=None):
         """ actually get the metadata """
         if id:
-            return self.mdict.get('id')
+            return self.mdict.get(id)
         else:
             return self.mdict
