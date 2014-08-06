@@ -1,0 +1,20 @@
+<registry>
+    <records interface="yoloelections.content.controlpanel.IElectionsSettings" prefix="yoloelections" />
+    <record
+      field="upcoming_elections"
+      interface="yoloelections.content.controlpanel.IElectionsSettings"
+      name="yoloelections.content.controlpanel.IElectionsSettings.upcoming_elections">
+        <field type="plone.registry.field.List">
+          <default/>
+          <description>Set the list of upcoming elections for the "next_election" field.
+            Format is code|title, one per line; e.g., G2020|November, 2020</description>
+          <title>Upcoming Elections</title>
+          <value_type type="plone.registry.field.ASCIILine">
+            <title>Election</title>
+          </value_type>
+        </field>
+        <value>
+          <element>None|Unscheduled</element>
+        </value>
+    </record>
+</registry>

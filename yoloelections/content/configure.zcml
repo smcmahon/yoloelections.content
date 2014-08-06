@@ -49,5 +49,12 @@
       directory="resources"
       />
 
+  <browser:page
+      name="elections-settings"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".controlpanel.SettingsControlPanel"
+      permission="cmf.ManagePortal"
+      />
+
 
 </configure>

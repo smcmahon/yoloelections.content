@@ -3,5 +3,5 @@
  <property name="title">Controls the available content types in your portal</property>
  <object name="candidate_filing" meta_type="Dexterity FTI"/>
  <object name="candidate_filings" meta_type="Dexterity FTI"/>
- <!-- -*- extra stuff goes here -*- -->
+ <object name="election_result" meta_type="Dexterity FTI"/>
 </object>
