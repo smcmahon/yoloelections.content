@@ -25,7 +25,7 @@ setup(name='yoloelections.content',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          # -*- Extra requirements: -*-
+          'collective.dexteritytextindexer'
       ],
       entry_points="""
       # -*- Entry points: -*-

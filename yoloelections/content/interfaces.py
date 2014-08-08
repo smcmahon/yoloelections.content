@@ -10,3 +10,8 @@ class ICandidateFiling(Interface):
 class ICandidateFilings(Interface):
     """
     """
+
+
+class IElectionResult(Interface):
+    """
+    """

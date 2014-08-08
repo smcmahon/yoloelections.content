@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 from interfaces import (
+    IElectionResult,
     ICandidateFiling,
     ICandidateFilings,
 )
@@ -9,6 +10,10 @@ from plone.dexterity.content import Container
 from plone.dexterity.content import Item
 from Products.statusmessages.interfaces import IStatusMessage
 from zope.interface import implements
+
+
+class ElectionResult(Item):
+    implements(IElectionResult)
 
 
 class CandidateFiling(Item):

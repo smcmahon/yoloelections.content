@@ -1,0 +1,29 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="dcn.eventreader">
+
+  <browser:page
+      for="*"
+      name="election-search"
+      class=".esearch.ElectionSearch"
+      permission="zope2.View"
+      template="esearch.pt"
+      />
+
+  <browser:page
+      for="*"
+      name="esearch"
+      class=".esearch.ElectionSearch"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="*"
+      name="election-report"
+      class=".esearch.ElectionReport"
+      permission="zope2.View"
+      template="ereport.pt"
+      />
+
+</configure>

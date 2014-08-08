@@ -1,0 +1,61 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="plone">
+<body>
+
+<metal:content-core fill-slot="content-core">
+    <metal:content-core define-macro="content-core">
+      <h2>Search Election Return Archives</h2>
+
+      <form action="@@election-report" method="get" style="padding:0.5em">
+        <div class="field">
+          <label for="SearchableText">Text</label>
+          <input name="SearchableText" id=="SearchableText" width=30 value="" />
+        </div>
+        <div class="field">
+          <label for="eldate">Election Date</label>
+          <select name="eldate" id="eldate" size="5">
+            <option value="" selected>Any Date</option>
+            <option tal:repeat="edate view/edates" tal:content="python:edate[1]" tal:attributes="value python:edate[0]" />
+          </select>
+        </div>
+        <div class="field">
+          <label for="district">District</label>
+            <select name="district:list" id="district" multiple size="5">
+              <option tal:repeat="district view/districts" tal:content="district" tal:attributes="value district" />
+            </select>
+        </div>
+        <div class="field">
+          <input type="SUBMIT" name="SUBMIT" value="Search Archives" style="font-size:125%" />
+        </div>
+      </form>
+
+    <h5>Search Tips:</h5>
+    <div class="pbody">
+      You may use any combination of <em>Text</em>, <em>Date</em>,
+      and <em>District</em> criteria to search. The search will
+      return contests that match <strong>all</strong> the specified
+      criteria.<br />
+      <br />
+      Use the <strong>Text</strong> search to find contests by candidate
+      or measure name. Select <em>Any Date</em> for <strong>Election
+      Date</strong> if date doesn't matter. Otherwise, pick a particular
+      election date. The <strong>District</strong> selection allows
+      you to choose one or more electoral districts. If you don't specify
+      any districts, all districts will be included.
+    </div>
+
+    <p class="body_copy" align="left">Please note: the on-line archives contain
+    only contests whose results were reported via the web. They do not contain
+    most uncontested races or party committees.</p>
+
+
+    </metal:content-core>
+</metal:content-core>
+
+</body>
+</html>
