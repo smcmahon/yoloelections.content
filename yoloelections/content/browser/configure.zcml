@@ -26,4 +26,12 @@
       template="ereport.pt"
       />
 
+  <browser:page
+      for="yoloelections.content.interfaces.IElectionResult"
+      name="result_view"
+      class=".archive.ArchiveView"
+      permission="zope2.View"
+      template="archive_view.pt"
+      />
+
 </configure>
