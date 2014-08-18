@@ -34,4 +34,12 @@
       template="archive_view.pt"
       />
 
+  <!-- Utility view for importing pages to election results -->
+  <browser:page
+    for="*"
+    name="import_results"
+    class=".results.ImportView"
+    permission="cmf.ManagePortal"
+    />
+
 </configure>

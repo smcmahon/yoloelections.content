@@ -35,8 +35,8 @@ class ElectionReport(BrowserView):
 
         def cmpb(a, b):
             return cmp(
-                (a.edate, a.district.lower(), a.title.lower()),
-                (b.edate, b.district.lower(), b.title.lower())
+                (a.edate, a.district.lower(), a.Title.lower()),
+                (b.edate, b.district.lower(), b.Title.lower())
                 )
 
         query = {
