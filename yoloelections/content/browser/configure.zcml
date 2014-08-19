@@ -34,6 +34,14 @@
       template="archive_view.pt"
       />
 
+  <browser:page
+      for="*"
+      name="result_folder_view"
+      class=".archive.ArchiveFolderView"
+      permission="zope2.View"
+      template="archive_folder_view.pt"
+      />
+
   <!-- Utility view for importing pages to election results -->
   <browser:page
     for="*"
