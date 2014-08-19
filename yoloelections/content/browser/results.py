@@ -12,7 +12,7 @@ import datetime
 import re
 
 mpat = re.compile(r'''\<meta name="(.+?)" content="(.+?)".*?\>''', re.DOTALL)
-charset = 'LATIN1'
+charset = 'UTF-8'
 
 
 class ImportView(BrowserView):

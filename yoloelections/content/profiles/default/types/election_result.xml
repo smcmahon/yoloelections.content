@@ -25,7 +25,7 @@
   <element value="plone.app.content.interfaces.INameFromTitle"/>
   <element value="plone.app.dexterity.behaviors.metadata.ICategorization"/>
   <element value="plone.app.relationfield.behavior.IRelatedItems"/>
-  <element value="pcollective.dexteritytextindexer.behavior.IDexterityTextIndexer"/>
+  <element value="collective.dexteritytextindexer.behavior.IDexterityTextIndexer"/>
  </property>
  <property name="schema"></property>
  <property
