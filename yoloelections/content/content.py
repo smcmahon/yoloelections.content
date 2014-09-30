@@ -4,6 +4,7 @@ from interfaces import (
     IElectionResult,
     ICandidateFiling,
     ICandidateFilings,
+    IVoterGuide,
 )
 
 from plone.dexterity.content import Container
@@ -22,6 +23,10 @@ class CandidateFiling(Item):
 
 class CandidateFilings(Container):
     implements(ICandidateFilings)
+
+
+class VoterGuide(Container):
+    implements(IVoterGuide)
 
 
 def setOffice(obj, event):

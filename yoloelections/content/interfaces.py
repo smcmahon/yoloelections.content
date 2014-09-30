@@ -15,3 +15,8 @@ class ICandidateFilings(Interface):
 class IElectionResult(Interface):
     """
     """
+
+
+class IVoterGuide(Interface):
+    """
+    """

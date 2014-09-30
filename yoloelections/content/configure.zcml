@@ -39,6 +39,14 @@
     />
 
   <browser:page
+    name="view"
+    permission="zope2.View"
+    for="yoloelections.content.interfaces.IVoterGuide"
+    class=".voter_guide.VoterGuideView"
+    template="voter_guide.pt"
+    />
+
+  <browser:page
       for="*"
       name="extract_metadata"
       class=".emetadata.ExtractMetadata"
