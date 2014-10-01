@@ -23,6 +23,7 @@
             }
         </style>
 
+        <div tal:replace="structure context/body/output | nothing" />
 
         <dl class="vguidelist">
             <tal:block tal:repeat="doffice view/guideItems">
