@@ -33,8 +33,9 @@
                     <div class="desig" tal:content="candidate/desig" />
                     <div class="party" tal:condition="candidate/party" tal:content="candidate/party" />
                     <div class="statement" tal:condition="candidate/statement">
-                      <a tal:attributes="href candidate/statement">Statement(s)</a>
-                  </div>
+                      <a tal:attributes="href candidate/statement"
+                         tal:content="candidate/label">Statement</a>
+                    </div>
                 </dd>
             </tal:block>
         </dl>
