@@ -15,8 +15,39 @@ class VoterGuideView(BrowserView):
 
         reader = csv.reader(cStringIO.StringIO(self.context.guide_data.data), dialect='excel')
         # import pdb; pdb.set_trace()
-        rez = []
+        first = True
+        last_doffice = None
+        offices = []
+        candidates = []
         for row in reader:
-            doffice, title, desig, pary, statement, ballots = row
-            rez.append([doffice, title, desig, pary, statement, ballots])
-        return rez
+            if first:
+                first = False
+                continue
+            doffice, candidate, desig, party, statement, ballots = [s.strip().decode('utf8', 'replace') for s in row]
+            if not candidate:
+                continue
+            if doffice != last_doffice:
+                last_doffice = doffice
+                candidates = []
+                offices.append({
+                    'doffice': doffice,
+                    'candidates': candidates,
+                    })
+            candidates.append({
+                    'candidate': candidate,
+                    'desig': desig,
+                    'party': party,
+                    'statement': statement,
+                })
+
+#            my_ballots = []
+#            for ballot in [s.strip() for s in ballots.split(',')]:
+#                if '-' in ballot:
+#                    start, end = ballot.split('-')
+#                    my_ballots += range(int(start), int(end)+1)
+#                else:
+#                    my_ballots.append(int(ballot))
+#                my_ballots.append(ballot)
+#            rez.append([doffice, title, desig, pary, statement, ballots,
+#                        my_ballots])
+        return offices

@@ -9,8 +9,35 @@
 
 <metal:content-core fill-slot="content-core">
     <metal:content-core define-macro="content-core">
-        Voter Guide
-        <div tal:content="view/guideItems" />
+        <style>
+            .vguidelist > dt {
+                background-color: #aac;
+                font-size: 140%;
+                padding: 0.5em;
+            }
+            .vguidelist h3 {
+                margin: 0.5em 0 0;
+            }
+            .party {
+                font-style: italic;
+            }
+        </style>
+
+
+        <dl class="vguidelist">
+            <tal:block tal:repeat="doffice view/guideItems">
+                <dt tal:content="doffice/doffice" />
+                <dd tal:repeat="candidate doffice/candidates">
+                    <h3 tal:content="candidate/candidate" />
+                    <div class="desig" tal:content="candidate/desig" />
+                    <div class="party" tal:condition="candidate/party" tal:content="candidate/party" />
+                    <div class="statement" tal:condition="candidate/statement">
+                      <a tal:attributes="href candidate/statement">Statement(s)</a>
+                  </div>
+                </dd>
+            </tal:block>
+        </dl>
+
     </metal:content-core>
 </metal:content-core>
 
