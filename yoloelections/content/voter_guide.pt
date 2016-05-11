@@ -7,7 +7,8 @@
       i18n:domain="plone">
 <body>
 
-<metal:content-core fill-slot="content-core">
+<metal:content-core fill-slot="content-core"
+    tal:define="show_statement request/statement | nothing">
     <metal:content-core define-macro="content-core">
         <style>
             .vguidelist > dt {
@@ -23,22 +24,34 @@
             }
         </style>
 
-        <div tal:replace="structure context/body/output | nothing" />
-
-        <dl class="vguidelist">
-            <tal:block tal:repeat="doffice view/guideItems">
-                <dt tal:content="doffice/doffice" />
-                <dd tal:repeat="candidate doffice/candidates">
-                    <h3 tal:content="candidate/candidate" />
-                    <div class="desig" tal:content="candidate/desig" />
-                    <div class="party" tal:condition="candidate/party" tal:content="candidate/party" />
-                    <div class="statement" tal:condition="candidate/statement">
-                      <a tal:attributes="href candidate/statement"
-                         tal:content="candidate/label">Statement</a>
-                    </div>
-                </dd>
+        <tal:block tal:condition="show_statement">
+            <tal:block tal:define="data view/getStatement">
+                <div tal:content="structure data/statement" />
             </tal:block>
-        </dl>
+        </tal:block>
+
+        <tal:block tal:condition="not: show_statement">
+            <div tal:replace="structure context/body/output | nothing" />
+
+            <dl class="vguidelist">
+                <tal:block tal:repeat="doffice view/guideItems">
+                    <dt tal:content="doffice/doffice" />
+                    <dd tal:repeat="candidate doffice/candidates">
+                        <h3 tal:content="candidate/candidate" />
+                        <div class="desig" tal:content="candidate/desig" />
+                        <div class="party" tal:condition="candidate/party" tal:content="candidate/party" />
+                        <div class="statement" tal:condition="candidate/statement">
+                          <a tal:attributes="href candidate/statement"
+                             tal:content="candidate/label">Statement</a>
+                          <tal:block tal:condition="candidate/statement_es | nothing">
+                              -
+                              <a tal:attributes="href candidate/statement_es">Declaración en Español</a>
+                          </tal:block>
+                        </div>
+                    </dd>
+                </tal:block>
+            </dl>
+        </tal:block>
 
     </metal:content-core>
 </metal:content-core>

@@ -10,8 +10,8 @@ import re
 
 mpat = re.compile(r'''\<meta name="(.+?)" content="(.+?)".*?\>''', re.DOTALL)
 
-target_path = '/yolo_recorder_sites/elections/election-returns/archives'
-charset = 'LATIN1'
+target_path = '/yolo_recorder_sites/elections/election-returns/archives/20141104'
+charset = 'UTF-8'
 
 app = app
 site = app.yolo_recorder_sites.elections
@@ -26,9 +26,9 @@ for brain in brains:
         id = brain.id
         text = obj.getRawText().decode(charset)
         mdict = dict(mpat.findall(text))
-        title = mdict.get('title', '').decode(charset)
-        edate = mdict.get('edate', '').decode(charset)
-        district = mdict.get('district', '').decode(charset)
+        title = mdict.get('title', '')
+        edate = mdict.get('edate', '')
+        district = mdict.get('district', '')
         if title:
             new_id = id[:-5]
             print id, new_id, title, edate, district

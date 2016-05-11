@@ -2,11 +2,14 @@
 
 from Products.Five import BrowserView
 
+import cgi
 import csv
 import cStringIO
 import re
 
 # District, Office; Candidate/Title; Designation; Party preference; Statement Filename; ballots
+# New:
+# District, Office; Candidate/Title; Designation; Party preference; statement; statement spanish; impartial analysis; argument for; rebuttal to argument for; argument against; rebuttal to argument against; full text pdf; ballot types
 
 
 class VoterGuideView(BrowserView):
@@ -18,15 +21,25 @@ class VoterGuideView(BrowserView):
 
         reader = csv.reader(cStringIO.StringIO(self.context.guide_data.data), dialect='excel')
         # import pdb; pdb.set_trace()
-        first = True
         last_doffice = None
         offices = []
         candidates = []
+        count = 0
         for row in reader:
-            if first:
-                first = False
+            count += 1
+            if count == 1:
                 continue
-            doffice, candidate, desig, party, statement, ballots = [s.strip().decode('utf8', 'replace') for s in row]
+
+            candidate = None
+            if len(row) == 6:
+                new_style = False
+                doffice, candidate, desig, party, statement, ballots = [s.strip().decode('utf8', 'replace') for s in row]
+            elif len(row) == 13:
+                new_style = True
+                doffice, candidate, desig, party, statement, statement_es, analysis, afor, rebut_afor, aag, rebut_aa, full_text, ballots = [s.strip().decode('utf8', 'replace') for s in row]
+            else:
+                continue
+
             if not candidate:
                 continue
 
@@ -47,17 +60,51 @@ class VoterGuideView(BrowserView):
                 offices.append({
                     'doffice': doffice,
                     'candidates': candidates,
-                    })
+                })
             if candidate.startswith('Measure'):
                 label = 'Analysis, text and arguments'
             else:
                 label = 'Statement'
+
+            if new_style:
+                statement = "?statement=%s" % count
+            if new_style and statement_es:
+                statement_es = "?statement=%s;l=es" % count
+            else:
+                statement_es = ''
             candidates.append({
+                'candidate': candidate,
+                'desig': desig,
+                'party': party,
+                'statement': statement,
+                'statement_es': statement_es,
+                'label': label,
+            })
+
+        return offices
+
+    def getStatement(self):
+
+        reader = csv.reader(cStringIO.StringIO(self.context.guide_data.data), dialect='excel')
+        row_number = int(self.request.get('statement', '0'))
+        language = self.request.get('l', 'en')
+        count = 0
+        for row in reader:
+            count += 1
+            if count == row_number:
+                doffice, candidate, desig, party, statement, statement_es, analysis, afor, rebut_afor, aag, rebut_aag, full_text, ballots = [s.strip().decode('utf8', 'replace') for s in row]
+                if language == 'es':
+                    statement = statement_es
+                else:
+                    statement = "\n".join([statement, analysis, afor, rebut_afor, aag, rebut_aag])
+                statement = cgi.escape(statement, quote=True)
+                statement = '\n'.join(["<p>%s</p>" % s for s in statement.split('\n')])
+                info = {
+                    'doffice': doffice,
                     'candidate': candidate,
                     'desig': desig,
                     'party': party,
                     'statement': statement,
-                    'label': label,
-                })
-
-        return offices
+                }
+                return info
+        return ""
