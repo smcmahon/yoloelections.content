@@ -26,6 +26,9 @@
 
         <tal:block tal:condition="show_statement">
             <tal:block tal:define="data view/getStatement">
+                <h2 tal:content="data/doffice" />
+                <h2 tal:content="data/candidate" />
+                <br />
                 <div tal:content="structure data/statement" />
             </tal:block>
         </tal:block>

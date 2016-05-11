@@ -96,9 +96,16 @@ class VoterGuideView(BrowserView):
                 if language == 'es':
                     statement = statement_es
                 else:
-                    statement = "\n".join([statement, analysis, afor, rebut_afor, aag, rebut_aag])
+                    statement = "\nXXXBREAKXXX\n".join([statement, analysis, afor, rebut_afor, aag, rebut_aag])
                 statement = cgi.escape(statement, quote=True)
-                statement = '\n'.join(["<p>%s</p>" % s for s in statement.split('\n')])
+                formatted = []
+                for s in statement.split('\n'):
+                    if s == s.upper():
+                        formatted.append("<h3>%s</h3>" % s)
+                    else:
+                        formatted.append("<p>%s</p>" % s)
+                statement = '\n'.join(formatted)
+                statement = statement.replace('XXXBREAKXXX', "<p>&nbsp;</p>")
                 info = {
                     'doffice': doffice,
                     'candidate': candidate,
