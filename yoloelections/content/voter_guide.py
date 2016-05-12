@@ -67,7 +67,10 @@ class VoterGuideView(BrowserView):
                 label = 'Statement'
 
             if new_style:
-                statement = "?statement=%s" % count
+                if statement:
+                    statement = "?statement=%s" % count
+            else:
+                full_text = ''
             if new_style and statement_es:
                 statement_es = "?statement=%s;l=es" % count
             else:
@@ -78,6 +81,7 @@ class VoterGuideView(BrowserView):
                 'party': party,
                 'statement': statement,
                 'statement_es': statement_es,
+                'full_text': full_text,
                 'label': label,
             })
 

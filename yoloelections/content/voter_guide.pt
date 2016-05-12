@@ -51,6 +51,9 @@
                               <a tal:attributes="href candidate/statement_es">Declaración en Español</a>
                           </tal:block>
                         </div>
+                        <div tal:condition="candidate/full_text | nothing">
+                            <a tal:attributes="href candidate/full_text">Full text of measure</a> (PDF)
+                        </div>
                     </dd>
                 </tal:block>
             </dl>
