@@ -67,7 +67,7 @@ class VoterGuideView(BrowserView):
                 label = 'Statement'
 
             if new_style:
-                if statement:
+                if statement or analysis or afor or rebut_afor or aag or rebut_aa:
                     statement = "?statement=%s" % count
             else:
                 full_text = ''
