@@ -16,8 +16,7 @@ class VoterGuideView(BrowserView):
     """ support for voter guide template """
 
     def guideItems(self):
-
-        target_ballot = int(self.request.get('ballot', '0'))
+        target_ballot = int(self.request.form.get('ballot', '0'))
 
         reader = csv.reader(cStringIO.StringIO(self.context.guide_data.data), dialect='excel')
         # import pdb; pdb.set_trace()
@@ -50,7 +49,10 @@ class VoterGuideView(BrowserView):
                         start, end = ballot.split('-')
                         my_ballots += range(int(start), int(end) + 1)
                     else:
-                        my_ballots.append(int(ballot))
+                        try:
+                            my_ballots.append(int(ballot))
+                        except ValueError:
+                            pass
                 if target_ballot not in my_ballots:
                     continue
 
