@@ -33,9 +33,9 @@ class VoterGuideView(BrowserView):
             if len(row) == 6:
                 new_style = False
                 doffice, candidate, desig, party, statement, ballots = [s.strip().decode('utf8', 'replace') for s in row]
-            elif len(row) == 13:
+            elif len(row) == 15:
                 new_style = True
-                doffice, candidate, desig, party, statement, statement_es, analysis, afor, rebut_afor, aag, rebut_aa, full_text, ballots = [s.strip().decode('utf8', 'replace') for s in row]
+                doffice, candidate, desig, party, statement, statement_es, statement_ru, tax_statement, analysis, afor, rebut_afor, aag, rebut_aa, full_text, ballots = [s.strip().decode('utf8', 'replace') for s in row]
             else:
                 continue
 
@@ -64,7 +64,7 @@ class VoterGuideView(BrowserView):
                     'candidates': candidates,
                 })
             if candidate.startswith('Measure'):
-                label = 'Analysis, text and arguments'
+                label = 'Tax statement, analysis, text and arguments'
             else:
                 label = 'Statement'
 
@@ -77,12 +77,17 @@ class VoterGuideView(BrowserView):
                 statement_es = "?statement=%s;l=es" % count
             else:
                 statement_es = ''
+            if new_style and statement_ru:
+                statement_ru = "?statement=%s;l=ru" % count
+            else:
+                statement_ru = ''
             candidates.append({
                 'candidate': candidate,
                 'desig': desig,
                 'party': party,
                 'statement': statement,
                 'statement_es': statement_es,
+                'statement_ru': statement_ru,
                 'full_text': full_text,
                 'label': label,
             })
@@ -98,18 +103,20 @@ class VoterGuideView(BrowserView):
         for row in reader:
             count += 1
             if count == row_number:
-                doffice, candidate, desig, party, statement, statement_es, analysis, afor, rebut_afor, aag, rebut_aag, full_text, ballots = [s.strip().decode('utf8', 'replace') for s in row]
+                doffice, candidate, desig, party, statement, statement_es, statement_ru, tax_statement, analysis, afor, rebut_afor, aag, rebut_aag, full_text, ballots = [s.strip().decode('utf8', 'replace') for s in row]
                 if language == 'es':
                     statement = statement_es
+                elif language == 'ru':
+                    statement = statement_ru
                 else:
-                    statement = "\nXXXBREAKXXX\n".join([statement, analysis, afor, rebut_afor, aag, rebut_aag])
+                    statement = "\nXXXBREAKXXX\n".join([tax_statement, statement, analysis, afor, rebut_afor, aag, rebut_aag])
                 statement = cgi.escape(statement, quote=True)
                 formatted = []
                 for s in statement.split('\n'):
                     if s == s.upper():
                         formatted.append("<h3>%s</h3>" % s)
                     else:
-                        formatted.append("<p>%s</p>" % s)
+                        formatted.append("%s<br />" % s)
                 statement = '\n'.join(formatted)
                 statement = statement.replace('XXXBREAKXXX', "<p>&nbsp;</p>")
                 info = {

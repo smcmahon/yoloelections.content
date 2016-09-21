@@ -50,6 +50,10 @@
                               -
                               <a tal:attributes="href candidate/statement_es">Declaración en Español</a>
                           </tal:block>
+                          <tal:block tal:condition="candidate/statement_ru | nothing">
+                              -
+                              <a tal:attributes="href candidate/statement_ru">Заявление на русском языке</a>
+                          </tal:block>
                         </div>
                         <div tal:condition="candidate/full_text | nothing">
                             <a tal:attributes="href candidate/full_text">Full text of measure</a> (PDF)
