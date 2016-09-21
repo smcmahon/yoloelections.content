@@ -113,10 +113,11 @@ class VoterGuideView(BrowserView):
                 statement = cgi.escape(statement, quote=True)
                 formatted = []
                 for s in statement.split('\n'):
-                    if s == s.upper():
-                        formatted.append("<h3>%s</h3>" % s)
-                    else:
-                        formatted.append("%s<br />" % s)
+                    formatted.append("%s<br />" % s)
+                    # if s == s.upper():
+                    #     formatted.append("<h3>%s</h3>" % s)
+                    # else:
+                    #     formatted.append("%s<br />" % s)
                 statement = '\n'.join(formatted)
                 statement = statement.replace('XXXBREAKXXX', "<p>&nbsp;</p>")
                 info = {
