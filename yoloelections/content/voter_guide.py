@@ -12,13 +12,19 @@ import re
 # District, Office; Candidate/Title; Designation; Party preference; statement; statement spanish; impartial analysis; argument for; rebuttal to argument for; argument against; rebuttal to argument against; full text pdf; ballot types
 
 
+def utf16Fix(data):
+    if data[0] == '\xff':
+        return data.decode('utf16').encode('utf8')
+    return data
+
+
 class VoterGuideView(BrowserView):
     """ support for voter guide template """
 
     def guideItems(self):
         target_ballot = int(self.request.form.get('ballot', '0'))
 
-        reader = csv.reader(cStringIO.StringIO(self.context.guide_data.data), dialect='excel')
+        reader = csv.reader(cStringIO.StringIO(utf16Fix(self.context.guide_data.data)), dialect='excel')
         # import pdb; pdb.set_trace()
         last_doffice = None
         offices = []
@@ -96,7 +102,7 @@ class VoterGuideView(BrowserView):
 
     def getStatement(self):
 
-        reader = csv.reader(cStringIO.StringIO(self.context.guide_data.data), dialect='excel')
+        reader = csv.reader(cStringIO.StringIO(utf16Fix(self.context.guide_data.data)), dialect='excel')
         row_number = int(self.request.get('statement', '0'))
         language = self.request.get('l', 'en')
         count = 0
