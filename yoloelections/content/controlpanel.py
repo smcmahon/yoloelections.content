@@ -6,17 +6,14 @@
 
 from plone.app.registry.browser.controlpanel import ControlPanelFormWrapper
 from plone.app.registry.browser.controlpanel import RegistryEditForm
-from plone.directives import form
-from plone.memoize.view import memoize_contextless
-from plone.registry.interfaces import IRegistry
 from zope import schema
-from zope.component import getUtility
+from zope.interface import Interface
 
 
-class IElectionsSettings(form.Schema):
+class IElectionsSettings(Interface):
     """ Define settings data structure """
 
-    form.widget(upcoming_elections='z3c.form.browser.textlines.TextLinesFieldWidget')
+    # form.widget(upcoming_elections='z3c.form.browser.textlines.TextLinesFieldWidget')
     upcoming_elections = schema.List(
         title=u'Upcoming Elections',
         description=u"""
@@ -41,4 +38,3 @@ class SettingsControlPanel(ControlPanelFormWrapper):
     View
     """
     form = SettingsEditForm
-
