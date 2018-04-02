@@ -23,6 +23,21 @@ def officeVocabulary(context):
     return SimpleVocabulary(terms)
 
 
+@provider(IContextSourceBinder)
+def partiesVocabulary(context):
+    while context is not None:
+        terms = []
+        parties = getattr(context, 'parties', None)
+        if parties is not None:
+            parties = [s.strip() for s in parties.split('\n')]
+            parties.sort()
+            for party in parties:
+                terms.append(SimpleTerm(value=party, token=len(terms), title=party))
+            break
+        context = getattr(context, 'aq_parent', None)
+    return SimpleVocabulary(terms)
+
+
 def compareFilings(a, b):
     ao = a.office.lower()
     bo = b.office.lower()

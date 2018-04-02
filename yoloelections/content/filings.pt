@@ -22,14 +22,14 @@
             }
             table.cfilings tr.office {
                 border-top: 1px solid black;
-                background-color: #ccc;
+                background-color: #eee;
             }
             table.cfilings h4 {
                 font-size: 1em;
                 margin-top: 0.5em;
             }
             table.cfilings tr.headers {
-                background-color: #ccc;
+                background-color: #eee;
                 line-height: 100%;
             }
             table.cfilings tr.candidate {
