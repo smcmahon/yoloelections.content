@@ -125,7 +125,7 @@ class VoterGuideView(BrowserView):
                     # else:
                     #     formatted.append("%s<br />" % s)
                 statement = '\n'.join(formatted)
-                statement = statement.replace('XXXBREAKXXX', "<p>&nbsp;</p>")
+                statement = statement.replace('XXXBREAKXXX', "<p>&nbsp;</p><hr /><p>&nbsp;</p>")
                 info = {
                     'doffice': doffice,
                     'candidate': candidate,
