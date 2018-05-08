@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from Products.Five import BrowserView
+from Products.PortalTransforms.transforms.rest import rest as Rest
 
 import cgi
 import csv
@@ -16,6 +17,11 @@ def utf16Fix(data):
     if data[0] == '\xff':
         return data.decode('utf16').encode('utf8')
     return data
+
+
+class D:
+    def setData(self, data):
+        self.value = data
 
 
 class VoterGuideView(BrowserView):
@@ -115,17 +121,27 @@ class VoterGuideView(BrowserView):
                 elif language == 'ru':
                     statement = statement_ru
                 else:
-                    statement = "\nXXXBREAKXXX\n".join([tax_statement, statement, analysis, afor, rebut_afor, aag, rebut_aag])
-                statement = cgi.escape(statement, quote=True)
-                formatted = []
-                for s in statement.split('\n'):
-                    formatted.append("%s<br />" % s)
-                    # if s == s.upper():
-                    #     formatted.append("<h3>%s</h3>" % s)
-                    # else:
-                    #     formatted.append("%s<br />" % s)
-                statement = '\n'.join(formatted)
-                statement = statement.replace('XXXBREAKXXX', "<p>&nbsp;</p><hr /><p>&nbsp;</p>")
+                    statement = u"XXXBREAKXXX".join([tax_statement, statement, analysis, afor, rebut_afor, aag, rebut_aag])
+                statement = re.sub(u'(XXXBREAKXXX)*$', u'', statement)
+                statement = re.sub(u'^(XXXBREAKXXX)*', u'', statement)
+                statement = statement.replace(u'\r\n', u'\n')
+
+                if u'\n\n' in statement:
+                    # process as ReST
+                    statement = statement.replace(u'\u2022', u'    *')
+                    statement = re.sub(ur'([^\n])\n([^\n])', ur'\1 \2', statement)
+                    transform = Rest()
+                    data = transform.convert(statement, D())
+                    statement = data.value.replace('XXXBREAKXXX', "<p><hr /></p>")
+                else:
+                    # minimal processing to preserve lines
+                    statement = cgi.escape(statement, quote=True)
+                    formatted = []
+                    for s in statement.split('\n'):
+                        formatted.append("%s<br />" % s)
+                    statement = '\n'.join(formatted)
+                    statement = statement.replace('XXXBREAKXXX', "<p><hr /></p>")
+
                 info = {
                     'doffice': doffice,
                     'candidate': candidate,
