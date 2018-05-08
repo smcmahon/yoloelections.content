@@ -54,10 +54,7 @@
         &lt;description/&gt;
         &lt;required&gt;False&lt;/required&gt;
         &lt;title&gt;Party&lt;/title&gt;
-        &lt;values&gt;
-          &lt;element&gt;DEM&lt;/element&gt;
-          &lt;element&gt;REP&lt;/element&gt;
-        &lt;/values&gt;
+        &lt;source&gt;yoloelections.content.filings.officeVocabulary&lt;/source&gt;
       &lt;/field&gt;
       &lt;field name="county_of_residence" type="zope.schema.Choice"&gt;
         &lt;default&gt;Yolo&lt;/default&gt;
