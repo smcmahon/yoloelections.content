@@ -36,6 +36,23 @@
         <tal:block tal:condition="not: show_statement">
             <div tal:replace="structure context/body/output | nothing" />
 
+            <p tal:define="url view/getDownloadableSampleURL" tal:condition="url">
+                <a tal:attributes="href url">Downloadable Sample Ballot Booklet</a>
+            </p>
+
+            <p tal:define="url python:view.getDownloadableSampleURL('sp')" tal:condition="url">
+                <a tal:attributes="href url">Fascimile ballot en español</a>
+            </p>
+            <p tal:define="url python:view.getDownloadableSampleURL('ru')" tal:condition="url">
+                <a tal:attributes="href url">Факсимильный бюллетень на русском языке</a>
+            </p>
+            <p tal:define="url python:view.getDownloadableSampleURL('ch')" tal:condition="url">
+                <a tal:attributes="href url">传真选票用中文</a>
+            </p>
+            <p tal:define="url python:view.getDownloadableSampleURL('ko')" tal:condition="url">
+                <a tal:attributes="href url">한국의 팩시밀리 투표</a>
+            </p>
+
             <dl class="vguidelist">
                 <tal:block tal:repeat="doffice view/guideItems">
                     <dt tal:content="doffice/doffice" />

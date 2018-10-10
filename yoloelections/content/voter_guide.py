@@ -151,3 +151,12 @@ class VoterGuideView(BrowserView):
                 }
                 return info
         return ""
+
+    def getDownloadableSampleURL(self, prefix='bt'):
+        target_ballot = int(self.request.form.get('ballot', '0'))
+        if target_ballot:
+            fn = '%s-%02d.pdf' % (prefix, target_ballot)
+            obj = self.context.get(fn)
+            if obj is not None:
+                return obj.absolute_url()
+            return ''
