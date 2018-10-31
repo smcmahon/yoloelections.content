@@ -36,7 +36,7 @@
     name="model_source">&lt;model xmlns:form="http://namespaces.plone.org/supermodel/form" xmlns:marshal="http://namespaces.plone.org/supermodel/marshal" xmlns:security="http://namespaces.plone.org/supermodel/security" xmlns:indexer="http://namespaces.plone.org/supermodel/indexer" xmlns="http://namespaces.plone.org/supermodel/schema"&gt;
     &lt;schema&gt;
       &lt;field name="guide_data" type="plone.namedfile.field.NamedBlobFile"&gt;
-        &lt;description&gt;Voter guide data in CSV format. One line per candidate/issue. Order of columns: District/Office, Candidate Name/Measure Title, Designation, Party, Statement, Statement_es, Statement_ru, Analysis, Argument for, Rebuttal to arg for, Arg against, Rebuttal to arg ag, name of pdf, ballot types&gt;
+        &lt;description&gt;Voter guide data in CSV format. One line per candidate/issue. Order of columns: District/Office, Candidate Name/Measure Title, Designation, Party, Statement, Statement_es, Statement_ru, Analysis, Argument for, Rebuttal to arg for, Arg against, Rebuttal to arg ag, name of pdf, ballot types&lt;/description&gt;
         &lt;title&gt;guide data&lt;/title&gt;
       &lt;/field&gt;
       &lt;field name="body" type="plone.app.textfield.RichText"&gt;
