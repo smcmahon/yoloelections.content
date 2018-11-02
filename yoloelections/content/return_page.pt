@@ -9,8 +9,35 @@
 
 <metal:content-core fill-slot="content-core">
     <metal:content-core define-macro="content-core">
+<style>
+table.return {
+    width: 50%;
+    margin: 1em auto;
+}
+table.return th {
+    text-align: center;
+}
+table.return td {
+    text-align: right;
+}
+</style>
         <div tal:repeat="contest view/contests">
-            <table>
+            <table class="return">
+                <thead>
+                    <tr>
+                        <th colspan="2" tal:content="contest/contest_name" />
+                    </tr>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>Votes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr tal:repeat="choice contest/choices">
+                        <td tal:content="choice/choice_name" />
+                        <td tal:content="choice/votes" />
+                    </tr>
+                </tbody>
             </table>
         </div>
     </metal:content-core>

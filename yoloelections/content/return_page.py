@@ -79,13 +79,22 @@ class ReturnPageView(BrowserView):
         rows.sort(contest_cmp)
         contests = []
         last_contest = 0
-        this_contest = []
         for row in rows:
             contest_no = row['contest']
-            if contest_no == last_contest:
-                this_contest.append(row)
-            else:
+            if contest_no != last_contest:
                 last_contest = contest_no
-                this_contest = [row, ]
+                this_contest = dict(
+                    contest_name=row['contest_name'],
+                    precincts=row['precincts'],
+                    prec_reporting=row['prec_reporting'],
+                    options=row['options'],
+                    ballots_cast=row['ballots_cast'],
+                    choices=[],
+                )
                 contests.append(this_contest)
+            this_contest['choices'].append(dict(
+                choice_name=row['choice_name'],
+                party=row['party'],
+                votes=row['votes'],
+            ))
         return contests
