@@ -17,6 +17,11 @@ class IElectionResult(Interface):
     """
 
 
+class IReturnPage(Interface):
+    """
+    """
+
+
 class IVoterGuide(Interface):
     """
     """

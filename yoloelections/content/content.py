@@ -4,6 +4,7 @@ from interfaces import (
     IElectionResult,
     ICandidateFiling,
     ICandidateFilings,
+    IReturnPage,
     IVoterGuide,
 )
 
@@ -29,6 +30,10 @@ class VoterGuide(Container):
     implements(IVoterGuide)
 
 
+class ReturnPage(Container):
+    implements(IReturnPage)
+
+
 def setOffice(obj, event):
     ''' Sets office name on folder if needed
     '''
@@ -38,7 +43,7 @@ def setOffice(obj, event):
             new_office = u"%s | %s" % (
                 obj.office_category.strip(),
                 obj.office_name.strip(),
-                )
+            )
             obj.office = new_office
             parent = obj.aq_parent
             offices = parent.offices
@@ -50,5 +55,3 @@ def setOffice(obj, event):
 
             messages = IStatusMessage(obj.REQUEST)
             messages.add(u"Office added", type=u"info")
-
-
