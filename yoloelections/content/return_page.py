@@ -56,6 +56,15 @@ def contest_cmp(a, b):
     return 0
 
 
+def commaize(anint):
+    """ return number formatted with thousand comma """
+    thou = anint / 1000
+    if thou:
+        return "%d,%03d" % (thou, anint % 1000)
+    else:
+        return "%d" % anint
+
+
 class ReturnPageView(BrowserView):
     """ support for return page template """
 
@@ -96,7 +105,7 @@ class ReturnPageView(BrowserView):
             this_contest['choices'].append(dict(
                 choice_name=row['choice_name'],
                 party=row['party'],
-                votes=row['votes'],
+                votes=commaize(row['votes']),
                 klass=(row['options'] >= row['rank']) and 'leading' or None,
             ))
         return contests
