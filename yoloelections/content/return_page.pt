@@ -32,36 +32,39 @@ table.return tr.leading {
 
         <div tal:replace="structure context/body/output | nothing" />
 
-        <div tal:repeat="contest view/contests">
-            <table class="return">
-                <thead>
-                    <tr>
-                        <th colspan="2">
-                            <h3 tal:content="contest/contest_name" style="margin:0" />
-                            <h4 tal:condition="python:contest['options'] > 1" style="margin:0">
-                                <span tal:replace="contest/options" /> elected
-                            </h4>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>&nbsp;</th>
-                        <th>Votes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr tal:repeat="choice contest/choices" tal:attributes="class choice/klass">
-                        <td><span tal:replace="choice/choice_name" /> <span tal:condition="choice/party">(<span tal:content="choice/party" />)</span></td>
-                        <td tal:content="choice/votes" />
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th colspan="2">
-                            <span tal:replace="contest/prec_reporting" /> of <span tal:replace="contest/precincts" /> precincts reporting
-                        </th>
-                    </tr>
-                </tfoot>
-            </table>
+        <div tal:repeat="page view/pages" tal:attributes="id page/page_id">
+            <h2 tal:content="page/page_title" />
+            <div tal:repeat="contest page/contests">
+                <table class="return">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <h3 tal:content="contest/contest_name" style="margin:0" />
+                                <h4 tal:condition="python:contest['options'] > 1" style="margin:0">
+                                    <span tal:replace="contest/options" /> elected
+                                </h4>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th>Votes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr tal:repeat="choice contest/choices" tal:attributes="class choice/klass">
+                            <td><span tal:replace="choice/choice_name" /> <span tal:condition="choice/party">(<span tal:content="choice/party" />)</span></td>
+                            <td tal:content="choice/votes" />
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="2">
+                                <span tal:replace="contest/prec_reporting" /> of <span tal:replace="contest/precincts" /> precincts reporting
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
     </metal:content-core>
 </metal:content-core>
