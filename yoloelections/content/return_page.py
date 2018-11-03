@@ -28,6 +28,7 @@ int_fields = [
     'contest',
     'rank',
     'ballots_cast',
+    'options',
     'votes',
     'precincts',
     'prec_reporting',
@@ -87,14 +88,15 @@ class ReturnPageView(BrowserView):
                     contest_name=row['contest_name'],
                     precincts=row['precincts'],
                     prec_reporting=row['prec_reporting'],
-                    options=row['options'],
                     ballots_cast=row['ballots_cast'],
                     choices=[],
+                    options=row['options'],
                 )
                 contests.append(this_contest)
             this_contest['choices'].append(dict(
                 choice_name=row['choice_name'],
                 party=row['party'],
                 votes=row['votes'],
+                klass=(row['options'] >= row['rank']) and 'leading' or None,
             ))
         return contests

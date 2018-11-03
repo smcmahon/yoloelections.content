@@ -12,20 +12,36 @@
 <style>
 table.return {
     width: 50%;
-    margin: 1em auto;
+    margin: 1em auto 1em 0;
 }
-table.return th {
+table.return th, table.return td {
+    text-align: right;
+    padding: 0.25em 0.5em;
+}
+table.return th:first-child {
     text-align: center;
 }
-table.return td {
-    text-align: right;
+table.return td:first-child {
+    text-align: left;
+    font-weight: bold;
+}
+table.return tr.leading {
+    background-color: rgba(255, 255, 0, 0.1);
 }
 </style>
+
+        <div tal:replace="structure context/body/output | nothing" />
+
         <div tal:repeat="contest view/contests">
             <table class="return">
                 <thead>
                     <tr>
-                        <th colspan="2" tal:content="contest/contest_name" />
+                        <th colspan="2">
+                            <h3 tal:content="contest/contest_name" style="margin:0" />
+                            <h4 tal:condition="python:contest['options'] > 1" style="margin:0">
+                                <span tal:replace="contest/options" /> elected
+                            </h4>
+                        </th>
                     </tr>
                     <tr>
                         <th>&nbsp;</th>
@@ -33,11 +49,18 @@ table.return td {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr tal:repeat="choice contest/choices">
-                        <td tal:content="choice/choice_name" />
+                    <tr tal:repeat="choice contest/choices" tal:attributes="class choice/klass">
+                        <td><span tal:replace="choice/choice_name" /> <span tal:condition="choice/party">(<span tal:content="choice/party" />)</span></td>
                         <td tal:content="choice/votes" />
                     </tr>
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="2">
+                            <span tal:replace="contest/prec_reporting" /> of <span tal:replace="contest/precincts" /> precincts reporting
+                        </th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </metal:content-core>
