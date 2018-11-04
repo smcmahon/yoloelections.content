@@ -2,11 +2,9 @@
 
 from Products.Five import BrowserView
 
-# import cgi
 import csv
 import cStringIO
-# import re
-
+from plone.i18n.normalizer import idnormalizer
 
 fields = {
     'Page': 'page',
@@ -37,6 +35,7 @@ float_fields = [
     'vote_tiebreaker',
 ]
 sort_order = (
+    'page',
     'contest',
     'rank',
 )
@@ -81,6 +80,7 @@ def entitle(contest):
     contest = contest.replace('Usd', 'USD')
     contest = contest.replace('Jusd', 'JUSD')
     contest = contest.replace('Ws ', 'WS ')
+    contest = contest.replace('Us ', 'US ')
     return contest
 
 
@@ -116,7 +116,7 @@ class ReturnPageView(BrowserView):
                 contests = []
                 pages.append(dict(
                     page_title=entitle(page),
-                    page_id=page.replace(' ', '_'),
+                    page_id=idnormalizer.normalize(page),
                     contests=contests,
                 ))
             contest_no = row['contest']
