@@ -34,18 +34,26 @@ table.return tr.leading {
 <script>
 jQuery(function($) {
     var buttons=$('#return_pages button'),
-        return_pages=$('.return_page');
+        return_pages=$('.return_page'),
+        hselector;
 
     return_pages.hide().attr('aria-expanded', 'false');
     buttons.click(function () {
         var jqt =$(this),
             target = jqt.attr('data-target');
 
+        window.location.hash = target
         buttons.removeClass('context');
         jqt.addClass('context');
         return_pages.hide().attr('aria-expanded', 'false');
         $(target).fadeIn(500).attr('aria-expanded', 'true');
     });
+    if (window.location.hash) {
+        hselector = "button[dtarget='" + window.location.hash + "']";
+        $(hselector).click();
+    } else {
+        buttons.first().click();
+    }
 });
 </script>
 
@@ -53,12 +61,12 @@ jQuery(function($) {
 
 
         <div id="return_pages">
-            <p>
+            <p>Showing:
                 <button
                     type="button"
                     tal:repeat="page view/pages"
                     tal:content="page/page_title"
-                    tal:attributes="data-target string:#${page/page_id}; aria-controls page/page_id"
+                    tal:attributes="data-target string:#${page/page_id}; dtarget string:#${page/page_id}; aria-controls page/page_id"
                 />
             </p>
             <div tal:repeat="page view/pages" tal:attributes="id page/page_id" class="return_page">

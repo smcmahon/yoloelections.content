@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from plone.i18n.normalizer import idnormalizer
+from plone.memoize import ram
 from Products.Five import BrowserView
+from time import time
 
 import csv
 import cStringIO
-from plone.i18n.normalizer import idnormalizer
 
 fields = {
     'Page': 'page',
@@ -87,6 +89,7 @@ def entitle(contest):
 class ReturnPageView(BrowserView):
     """ support for return page template """
 
+    @ram.cache(lambda *args: time() // 60)
     def pages(self):
         reader = csv.DictReader(
             cStringIO.StringIO(utf16Fix(self.context.return_data.data)),
