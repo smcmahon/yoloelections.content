@@ -97,6 +97,12 @@ def entitle(contest):
     return contest
 
 
+def as_pct(num, denom):
+    if denom == 0:
+        return "0.0%"
+    return "{:0.1f}%".format(100.0 * num / denom)
+
+
 class ReturnPageView(BrowserView):
     """ support for return page template
         Parses the csv file in return_data,
@@ -165,6 +171,7 @@ class ReturnPageView(BrowserView):
                     contest_name=entitle(row['contest_name']),
                     precincts=row['precincts'],
                     prec_reporting=row['prec_reporting'],
+                    prec_percent=as_pct(row['precincts'], row['prec_reporting']),
                     ballots_cast=row['ballots_cast'],
                     choices=[],
                     options=row['options'],
@@ -186,7 +193,7 @@ class ReturnPageView(BrowserView):
                 total_votes = contest['total_votes']
                 ballots_cast = contest['ballots_cast']
                 for choice in contest['choices']:
-                    choice['vote_pct'] = "{:0.1f}%".format(100.0 * choice['votes'] / total_votes)
-                    choice['ballot_pct'] = "{:0.1f}%".format(100.0 * choice['votes'] / ballots_cast)
+                    choice['vote_pct'] = as_pct(choice['votes'], total_votes)
+                    choice['ballot_pct'] = as_pct(choice['votes'], ballots_cast)
 
         return pages
