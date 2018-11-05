@@ -8,6 +8,7 @@ from time import time
 import csv
 import cStringIO
 
+# column headers mapped to field keys
 fields = {
     'Page': 'page',
     'Contest #': 'contest',
@@ -24,6 +25,7 @@ fields = {
     'prec reporting': 'prec_reporting',
     'VOTE W TIEBREAKER': 'vote_tiebreaker',
 }
+# These fields get converted to integers
 int_fields = [
     'contest',
     'rank',
@@ -33,17 +35,38 @@ int_fields = [
     'precincts',
     'prec_reporting',
 ]
+# These fields get converted to floats
 float_fields = [
     'vote_tiebreaker',
 ]
+# sort hierarchy
 sort_order = (
     'page',
     'contest',
     'rank',
 )
+# corrections for string.title results
+title_fixups = (
+    (' The ', ' the '),
+    (' A ', ' a '),
+    (' Of ', ' of '),
+    ('1St ', '1st '),
+    ('2Nd ', '2nd '),
+    ('3Rd ', '3rd '),
+    ('4Th ', '4th '),
+    ('5Th ', '5th '),
+    ('6Th ', '6th '),
+    ('7Th ', '7th '),
+    ('8Th ', '8th '),
+    ('Usd', 'USD'),
+    ('Jusd', 'JUSD'),
+    ('Ws ', 'WS '),
+    ('Us ', 'US '),
+)
 
 
 def utf16Fix(data):
+    # if this looks like utf16, convert to utf8
     if data[0] == '\xff':
         return data.decode('utf16').encode('utf8')
     return data
@@ -67,34 +90,45 @@ def commaize(anint):
 
 
 def entitle(contest):
+    # title case with fixups
     contest = contest.title()
-    contest = contest.replace(' The ', ' the ')
-    contest = contest.replace(' A ', ' a ')
-    contest = contest.replace(' Of ', ' of ')
-    contest = contest.replace('1St ', '1st ')
-    contest = contest.replace('2Nd ', '2nd ')
-    contest = contest.replace('3Rd ', '3rd ')
-    contest = contest.replace('4Th ', '4th ')
-    contest = contest.replace('5Th ', '5th ')
-    contest = contest.replace('6Th ', '6th ')
-    contest = contest.replace('7Th ', '7th ')
-    contest = contest.replace('8Th ', '8th ')
-    contest = contest.replace('Usd', 'USD')
-    contest = contest.replace('Jusd', 'JUSD')
-    contest = contest.replace('Ws ', 'WS ')
-    contest = contest.replace('Us ', 'US ')
+    for s, r in title_fixups:
+        contest = contest.replace(s, r)
     return contest
 
 
 class ReturnPageView(BrowserView):
-    """ support for return page template """
+    """ support for return page template
+        Parses the csv file in return_data,
+        returns a list of pages;
+        each page is a dict with keys:
+            page_title,
+            page_id,
+            contests
+        page_id is a normalized id created from the page title.
+        contests is a list of contest dicts:
+            contest_name,
+            precincts,
+            prec_reporting,
+            ballots_cast,
+            choices,
+            options
+        choices is a list of candidate/choice dicts:
+            choice_name,
+            party,
+            votes,
+            klass
+        klass is a css class used to highlight leaders.
+    """
 
-    @ram.cache(lambda *args: time() // 60)
+    # @ram.cache(lambda *args: time() // 60)
     def pages(self):
         reader = csv.DictReader(
             cStringIO.StringIO(utf16Fix(self.context.return_data.data)),
             dialect='excel'
         )
+
+        # parse the csv, sort it
         rows = []
         for row in reader:
             rez = {}
@@ -109,6 +143,8 @@ class ReturnPageView(BrowserView):
                         rez[fixed_key] = row[akey]
             rows.append(rez)
         rows.sort(contest_cmp)
+
+        # construct pages list
         pages = []
         last_page = ''
         last_contest = 0
@@ -132,12 +168,25 @@ class ReturnPageView(BrowserView):
                     ballots_cast=row['ballots_cast'],
                     choices=[],
                     options=row['options'],
+                    multi_option=row['options'] > 1,
+                    total_votes=0,
                 )
                 contests.append(this_contest)
+            this_contest['total_votes'] += row['votes']
             this_contest['choices'].append(dict(
                 choice_name=row['choice_name'].title(),
                 party=row['party'],
-                votes=commaize(row['votes']),
+                votes=row['votes'],
+                votes_rep=commaize(row['votes']),
                 klass=(row['options'] >= row['rank']) and 'leading' or None,
             ))
+        # compute some percentages
+        for page in pages:
+            for contest in page['contests']:
+                total_votes = contest['total_votes']
+                ballots_cast = contest['ballots_cast']
+                for choice in contest['choices']:
+                    choice['vote_pct'] = "{:0.1f}%".format(100.0 * choice['votes'] / total_votes)
+                    choice['ballot_pct'] = "{:0.1f}%".format(100.0 * choice['votes'] / ballots_cast)
+
         return pages
