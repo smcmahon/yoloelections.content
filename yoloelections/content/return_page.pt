@@ -12,7 +12,7 @@
 <style>
 table.return {
     width: 50%;
-    margin: 1em auto 1em 0;
+    margin: 2em auto 1em 0;
 }
 table.return th, table.return td {
     text-align: right;

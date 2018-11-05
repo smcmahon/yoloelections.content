@@ -116,18 +116,22 @@ class ReturnPageView(BrowserView):
             contest_name,
             precincts,
             prec_reporting,
+            prec_percent, # computed and formatted
             ballots_cast,
             choices,
-            options
+            options,
+            total_votes # tabulated by us
         choices is a list of candidate/choice dicts:
             choice_name,
             party,
             votes,
-            klass
-        klass is a css class used to highlight leaders.
+            votes_rep,  # commaized
+            votes_pct,  # tabulated and formatted
+            ballot_pct, # tabulated and formatted
+            klass       # a css class used to highlight leaders.
     """
 
-    # @ram.cache(lambda *args: time() // 60)
+    @ram.cache(lambda *args: time() // 60)
     def pages(self):
         reader = csv.DictReader(
             cStringIO.StringIO(utf16Fix(self.context.return_data.data)),
@@ -185,7 +189,7 @@ class ReturnPageView(BrowserView):
                 party=row['party'],
                 votes=row['votes'],
                 votes_rep=commaize(row['votes']),
-                klass=(row['options'] >= row['rank']) and 'leading' or None,
+                klass=row['ballots_cast'] and (row['options'] >= row['rank']) and 'leading' or None,
             ))
         # compute some percentages
         for page in pages:
