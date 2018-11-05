@@ -30,6 +30,15 @@ table.return tr.leading {
 }
 .collapse {display:none}
 .collapse.in {display:block}
+@media (max-width: 767px) {
+    table.return {
+        width: 100%;
+    }
+    #return_pages button {
+        width: 100%;
+        margin: 0.25em 0;
+    }
+}
 </style>
 <script>
 jQuery(function($) {
