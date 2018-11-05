@@ -43,27 +43,26 @@ table.return tr.leading {
 <script>
 jQuery(function($) {
     var buttons=$('#return_pages button'),
-        return_pages=$('.return_page'),
-        hselector;
+        return_pages=$('.return_page');
 
-    return_pages.hide().attr('aria-expanded', 'false');
     buttons.click(function () {
         var jqt =$(this),
-            target = jqt.attr('data-target');
+            target = jqt.attr('data_target');
 
-        if (window.location.hash) {
+        if (window.history.pushState) {
+            window.history.pushState(null, null, target);
+        } else {
             window.location.hash = target;
         }
+
         buttons.removeClass('context');
         jqt.addClass('context');
         return_pages.hide().attr('aria-expanded', 'false');
-        $(target).fadeIn(500).attr('aria-expanded', 'true');
+        $(target + 'x').fadeIn(500).attr('aria-expanded', 'true');
     });
+
     if (window.location.hash) {
-        hselector = "button[dtarget='" + window.location.hash + "']";
-        setTimeout(function() {
-            $(hselector).click();
-        }, 100);
+        $("button[data_target='" + window.location.hash + "']").click();
     } else {
         buttons.first().click();
     }
@@ -78,10 +77,10 @@ jQuery(function($) {
                     type="button"
                     tal:repeat="page view/pages"
                     tal:content="page/page_title"
-                    tal:attributes="data-target string:#${page/page_id}; dtarget string:#${page/page_id}; aria-controls page/page_id"
+                    tal:attributes="data_target string:#${page/page_id}; aria-controls string:${page/page_id}x"
                 />
             </p>
-            <div tal:repeat="page view/pages" tal:attributes="id page/page_id" class="return_page">
+            <div tal:repeat="page view/pages" tal:attributes="id string:${page/page_id}x" class="return_page">
                 <h2 tal:content="page/page_title" />
                 <div tal:repeat="contest page/contests">
                     <table class="return">
