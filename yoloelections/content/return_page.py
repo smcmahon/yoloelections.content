@@ -123,9 +123,12 @@ class ReturnPageView(BrowserView):
             prec_reporting,
             prec_percent, # computed and formatted
             ballots_cast,
+            ballots_cast_rep, # commaized ballots_cast
             choices,
             options,
             total_votes # tabulated by us
+            total_reg,
+            turnout_pct,
         choices is a list of candidate/choice dicts:
             choice_name,
             party,
