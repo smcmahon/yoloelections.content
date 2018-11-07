@@ -24,6 +24,8 @@ fields = {
     'precincts ': 'precincts',
     'prec reporting': 'prec_reporting',
     'VOTE W TIEBREAKER': 'vote_tiebreaker',
+    'tot reg': 'total_reg',
+    'turnout reg': 'turnout_reg',
 }
 # These fields get converted to integers
 int_fields = [
@@ -34,6 +36,8 @@ int_fields = [
     'votes',
     'precincts',
     'prec_reporting',
+    'total_reg',
+    'turnout_reg',
 ]
 # These fields get converted to floats
 float_fields = [
@@ -60,6 +64,7 @@ title_fixups = (
     ('8Th ', '8th '),
     ('Usd', 'USD'),
     ('Jusd', 'JUSD'),
+    ('Djusd', 'DJUSD'),
     ('Ws ', 'WS '),
     ('Us ', 'US '),
 )
@@ -143,7 +148,7 @@ class ReturnPageView(BrowserView):
         for row in reader:
             rez = {}
             for akey in row.keys():
-                fixed_key = fields[akey]
+                fixed_key = fields.get(akey)
                 if fixed_key is not None:
                     if fixed_key in int_fields:
                         rez[fixed_key] = int(row[akey])
@@ -172,15 +177,18 @@ class ReturnPageView(BrowserView):
             if contest_no != last_contest:
                 last_contest = contest_no
                 this_contest = dict(
-                    contest_name=entitle(row['contest_name']),
+                    contest_name=row['contest_name'],
                     precincts=row['precincts'],
                     prec_reporting=row['prec_reporting'],
-                    prec_percent=as_pct(row['precincts'], row['prec_reporting']),
+                    prec_percent=as_pct(row['prec_reporting'], row['precincts']),
                     ballots_cast=row['ballots_cast'],
+                    ballots_cast_rep=commaize(row['ballots_cast']),
                     choices=[],
                     options=row['options'],
                     multi_option=row['options'] > 1,
                     total_votes=0,
+                    total_reg=commaize(row['total_reg']),
+                    turnout_pct=as_pct(row['ballots_cast'], row['total_reg'])
                 )
                 contests.append(this_contest)
             this_contest['total_votes'] += row['votes']

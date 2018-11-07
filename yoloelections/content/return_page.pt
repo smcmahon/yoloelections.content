@@ -112,6 +112,10 @@ jQuery(function($) {
                             <tr>
                                 <th colspan="3">
                                     <span tal:replace="contest/prec_reporting" /> of <span tal:replace="contest/precincts" /> precincts reporting (<span tal:replace="contest/prec_percent" />)
+                                    <tal:block tal:condition="context/show_turnout | nothing">
+                                        <br />
+                                        Turnout: <span tal:replace="contest/ballots_cast_rep" /> of <span tal:replace="contest/total_reg" /> registered voters (<span tal:replace="contest/turnout_pct" />)
+                                    </tal:block>
                                 </th>
                             </tr>
                         </tfoot>

@@ -14,7 +14,8 @@
  <property name="filter_content_types">True</property>
  <property name="allowed_content_types">
   <element value="File"/>
- </property>
+  <element value="Image"/>
+</property>
  <property name="allow_discussion">False</property>
  <property name="default_view">view</property>
  <property name="view_methods">
@@ -33,7 +34,7 @@
  </property>
  <property name="schema"></property>
  <property
-    name="model_source">&lt;model xmlns:form="http://namespaces.plone.org/supermodel/form" xmlns:marshal="http://namespaces.plone.org/supermodel/marshal" xmlns:security="http://namespaces.plone.org/supermodel/security" xmlns:indexer="http://namespaces.plone.org/supermodel/indexer" xmlns="http://namespaces.plone.org/supermodel/schema"&gt;
+    name="model_source">&lt;model xmlns:form="http://namespaces.plone.org/supermodel/form" xmlns:i18n="http://xml.zope.org/namespaces/i18n" xmlns:indexer="http://namespaces.plone.org/supermodel/indexer" xmlns:lingua="http://namespaces.plone.org/supermodel/lingua" xmlns:marshal="http://namespaces.plone.org/supermodel/marshal" xmlns:security="http://namespaces.plone.org/supermodel/security" xmlns:users="http://namespaces.plone.org/supermodel/users" xmlns="http://namespaces.plone.org/supermodel/schema"&gt;
     &lt;schema&gt;
       &lt;field name="return_data" type="plone.namedfile.field.NamedBlobFile"&gt;
         &lt;description&gt;Return page data in CSV format. One line per contest. Row one must be headers.&lt;/description&gt;
@@ -42,6 +43,13 @@
       &lt;field name="body" type="plone.app.textfield.RichText"&gt;
         &lt;description&gt;Additional information, shown on page.&lt;/description&gt;
         &lt;title&gt;Body Text&lt;/title&gt;
+      &lt;/field&gt;
+      &lt;field name="show_turnout" type="zope.schema.Bool"&gt;
+        &lt;description&gt;Should we report turnout figures and percentages?&lt;/description&gt;
+        &lt;required&gt;False&lt;/required&gt;
+        &lt;default&gt;True&lt;/default&gt;
+        &lt;title&gt;Show Turnout&lt;/title&gt;
+        &lt;form:widget type="z3c.form.browser.radio.RadioFieldWidget"/&gt;
       &lt;/field&gt;
     &lt;/schema&gt;
   &lt;/model&gt;</property>
