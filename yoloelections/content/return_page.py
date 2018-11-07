@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from plone.i18n.normalizer import idnormalizer
-from plone.memoize import ram
+# from plone.memoize import ram
 from Products.Five import BrowserView
-from time import time
+# from time import time
 
 import csv
 import cStringIO
@@ -139,7 +139,7 @@ class ReturnPageView(BrowserView):
             klass       # a css class used to highlight leaders.
     """
 
-    @ram.cache(lambda *args: time() // 60)
+    # @ram.cache(lambda *args: time() // 60)
     def pages(self):
         reader = csv.DictReader(
             cStringIO.StringIO(utf16Fix(self.context.return_data.data)),
