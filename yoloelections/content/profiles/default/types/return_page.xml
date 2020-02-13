@@ -36,7 +36,7 @@
   &lt;model xmlns:form="http://namespaces.plone.org/supermodel/form" xmlns:i18n="http://xml.zope.org/namespaces/i18n" xmlns:indexer="http://namespaces.plone.org/supermodel/indexer" xmlns:lingua="http://namespaces.plone.org/supermodel/lingua" xmlns:marshal="http://namespaces.plone.org/supermodel/marshal" xmlns:security="http://namespaces.plone.org/supermodel/security" xmlns:users="http://namespaces.plone.org/supermodel/users" xmlns="http://namespaces.plone.org/supermodel/schema"&gt;
     &lt;schema&gt;
       &lt;field name="return_data" type="plone.namedfile.field.NamedBlobFile"&gt;
-        &lt;description&gt;Return page data in CSV format. One line per contest. Row one must be headers.&lt;/description&gt;
+        &lt;description&gt;Return page data in "cumulative" CSV format. One line per contest. Row one must be headers.&lt;/description&gt;
         &lt;title&gt;Return data&lt;/title&gt;
       &lt;/field&gt;
       &lt;field name="show_all_zeros" type="zope.schema.Bool"&gt;
