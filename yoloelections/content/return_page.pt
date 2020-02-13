@@ -40,87 +40,45 @@ table.return tr.leading {
     }
 }
 </style>
-<script>
-jQuery(function($) {
-    var buttons=$('#return_pages button'),
-        return_pages=$('.return_page');
-
-    buttons.click(function () {
-        var jqt =$(this),
-            target = jqt.attr('data_target');
-
-        if (window.history.pushState) {
-            window.history.pushState(null, null, target);
-        } else {
-            window.location.hash = target;
-        }
-
-        buttons.removeClass('context');
-        jqt.addClass('context');
-        return_pages.hide().attr('aria-expanded', 'false');
-        $(target + 'x').fadeIn(500).attr('aria-expanded', 'true');
-    });
-
-    if (window.location.hash) {
-        $("button[data_target='" + window.location.hash + "']").click();
-    } else {
-        buttons.first().click();
-    }
-});
-</script>
 
         <div tal:replace="structure context/body/output | nothing" />
 
         <div id="return_pages">
-            <p>Showing:
-                <button
-                    type="button"
-                    tal:repeat="page view/pages"
-                    tal:content="page/page_title"
-                    tal:attributes="data_target string:#${page/page_id}; aria-controls string:${page/page_id}x"
-                />
-            </p>
-            <div tal:repeat="page view/pages" tal:attributes="id string:${page/page_id}x" class="return_page">
-                <h2 tal:content="page/page_title" />
-                <div tal:repeat="contest page/contests">
-                    <table class="return">
-                        <thead>
-                            <tr>
-                                <th colspan="3">
-                                    <h3 tal:content="contest/contest_name" style="margin:0" />
-                                    <h4 tal:condition="contest/multi_option" style="margin:0">
-                                        <span tal:replace="contest/options" /> elected
-                                    </h4>
-                                </th>
-                            </tr>
-                            <tr>
-                                <th>&nbsp;</th>
-                                <th>Votes</th>
-                                <th tal:condition="not: contest/multi_option">Vote %</th>
-                                <th tal:condition="contest/multi_option">Ballot %</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr tal:repeat="choice contest/choices" tal:attributes="class choice/klass">
-                                <td><span tal:replace="choice/choice_name" /> <span tal:condition="choice/party">(<span tal:content="choice/party" />)</span></td>
-                                <td tal:content="choice/votes_rep" />
-                                <td tal:condition="not: contest/multi_option" tal:content="choice/vote_pct" />
-                                <td  tal:condition="contest/multi_option" tal:content="choice/ballot_pct" />
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th colspan="3">
-                                    <span tal:replace="contest/prec_reporting" /> of <span tal:replace="contest/precincts" /> precincts reporting (<span tal:replace="contest/prec_percent" />)
-                                    <tal:block tal:condition="context/show_turnout | nothing">
-                                        <br />
-                                        Turnout: <span tal:replace="contest/ballots_cast_rep" /> of <span tal:replace="contest/total_reg" /> registered voters (<span tal:replace="contest/turnout_pct" />)
-                                    </tal:block>
-                                </th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+            <div tal:repeat="contest view/pages">
+                <table class="return">
+                    <thead>
+                        <tr>
+                            <th colspan="3">
+                                <h3 tal:content="python:contest['contest_titles'][0]" style="margin:0" />
+                                <h4 tal:repeat="subtitle python:contest['contest_titles'][1:]" tal:content="subtitle" style="margin:0" />
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th>Votes</th>
+                            <th>Vote %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr tal:repeat="choice contest/choices" tal:attributes="class choice/klass | nothing">
+                            <td><span tal:replace="choice/choice_title" /> <span tal:condition="choice/choice_party">(<span tal:content="choice/party" />)</span></td>
+                            <td tal:content="choice/choice_votes" />
+                            <td tal:content="choice/choice_percent" />
+                        </tr>
+                        <tr>
+                            <td>Total Votes</td>
+                            <td tal:content="contest/cast_votes" />
+                            <td tal:content="contest/cast_votes_percent" />
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="3">
+                                <span tal:replace="contest/precincts_reporting" /> of <span tal:replace="contest/precincts_total" /> precincts reporting (<span tal:replace="contest/precincts_percent" />)
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
         </div>
     </metal:content-core>

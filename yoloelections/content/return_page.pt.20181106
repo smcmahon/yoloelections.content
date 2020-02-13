@@ -1,0 +1,130 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="plone">
+<body>
+
+<metal:content-core fill-slot="content-core">
+    <metal:content-core define-macro="content-core">
+<style>
+table.return {
+    width: 50%;
+    margin: 2em auto 1em 0;
+}
+table.return th, table.return td {
+    text-align: right;
+    padding: 0.25em 0.5em;
+}
+table.return th:first-child {
+    text-align: center;
+}
+table.return td:first-child {
+    text-align: left;
+    font-weight: bold;
+}
+table.return tr.leading {
+    background-color: rgba(255, 255, 0, 0.1);
+}
+.collapse {display:none}
+.collapse.in {display:block}
+@media (max-width: 767px) {
+    table.return {
+        width: 100%;
+    }
+    #return_pages button {
+        width: 100%;
+        margin: 0.25em 0;
+    }
+}
+</style>
+<script>
+jQuery(function($) {
+    var buttons=$('#return_pages button'),
+        return_pages=$('.return_page');
+
+    buttons.click(function () {
+        var jqt =$(this),
+            target = jqt.attr('data_target');
+
+        if (window.history.pushState) {
+            window.history.pushState(null, null, target);
+        } else {
+            window.location.hash = target;
+        }
+
+        buttons.removeClass('context');
+        jqt.addClass('context');
+        return_pages.hide().attr('aria-expanded', 'false');
+        $(target + 'x').fadeIn(500).attr('aria-expanded', 'true');
+    });
+
+    if (window.location.hash) {
+        $("button[data_target='" + window.location.hash + "']").click();
+    } else {
+        buttons.first().click();
+    }
+});
+</script>
+
+        <div tal:replace="structure context/body/output | nothing" />
+
+        <div id="return_pages">
+            <p>Showing:
+                <button
+                    type="button"
+                    tal:repeat="page view/pages"
+                    tal:content="page/page_title"
+                    tal:attributes="data_target string:#${page/page_id}; aria-controls string:${page/page_id}x"
+                />
+            </p>
+            <div tal:repeat="page view/pages" tal:attributes="id string:${page/page_id}x" class="return_page">
+                <h2 tal:content="page/page_title" />
+                <div tal:repeat="contest page/contests">
+                    <table class="return">
+                        <thead>
+                            <tr>
+                                <th colspan="3">
+                                    <h3 tal:content="contest/contest_name" style="margin:0" />
+                                    <h4 tal:condition="contest/multi_option" style="margin:0">
+                                        <span tal:replace="contest/options" /> elected
+                                    </h4>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>&nbsp;</th>
+                                <th>Votes</th>
+                                <th tal:condition="not: contest/multi_option">Vote %</th>
+                                <th tal:condition="contest/multi_option">Ballot %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr tal:repeat="choice contest/choices" tal:attributes="class choice/klass">
+                                <td><span tal:replace="choice/choice_name" /> <span tal:condition="choice/party">(<span tal:content="choice/party" />)</span></td>
+                                <td tal:content="choice/votes_rep" />
+                                <td tal:condition="not: contest/multi_option" tal:content="choice/vote_pct" />
+                                <td  tal:condition="contest/multi_option" tal:content="choice/ballot_pct" />
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="3">
+                                    <span tal:replace="contest/prec_reporting" /> of <span tal:replace="contest/precincts" /> precincts reporting (<span tal:replace="contest/prec_percent" />)
+                                    <tal:block tal:condition="context/show_turnout | nothing">
+                                        <br />
+                                        Turnout: <span tal:replace="contest/ballots_cast_rep" /> of <span tal:replace="contest/total_reg" /> registered voters (<span tal:replace="contest/turnout_pct" />)
+                                    </tal:block>
+                                </th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </metal:content-core>
+</metal:content-core>
+
+</body>
+</html>

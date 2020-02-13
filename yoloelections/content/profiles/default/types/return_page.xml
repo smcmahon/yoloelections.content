@@ -15,7 +15,7 @@
  <property name="allowed_content_types">
   <element value="File"/>
   <element value="Image"/>
-</property>
+ </property>
  <property name="allow_discussion">False</property>
  <property name="default_view">view</property>
  <property name="view_methods">
@@ -23,8 +23,7 @@
  </property>
  <property name="default_view_fallback">False</property>
  <property name="add_permission">cmf.AddPortalContent</property>
- <property
-    name="klass">yoloelections.content.content.ReturnPage</property>
+ <property name="klass">yoloelections.content.content.ReturnPage</property>
  <property name="behaviors">
   <element value="plone.app.content.interfaces.INameFromTitle"/>
   <element value="plone.app.dexterity.behaviors.metadata.IBasic"/>
@@ -33,23 +32,45 @@
      value="plone.app.dexterity.behaviors.exclfromnav.IExcludeFromNavigation"/>
  </property>
  <property name="schema"></property>
- <property
-    name="model_source">&lt;model xmlns:form="http://namespaces.plone.org/supermodel/form" xmlns:i18n="http://xml.zope.org/namespaces/i18n" xmlns:indexer="http://namespaces.plone.org/supermodel/indexer" xmlns:lingua="http://namespaces.plone.org/supermodel/lingua" xmlns:marshal="http://namespaces.plone.org/supermodel/marshal" xmlns:security="http://namespaces.plone.org/supermodel/security" xmlns:users="http://namespaces.plone.org/supermodel/users" xmlns="http://namespaces.plone.org/supermodel/schema"&gt;
+ <property name="model_source">&lt;?xml version='1.0' encoding='utf8'?&gt;
+  &lt;model xmlns:form="http://namespaces.plone.org/supermodel/form" xmlns:i18n="http://xml.zope.org/namespaces/i18n" xmlns:indexer="http://namespaces.plone.org/supermodel/indexer" xmlns:lingua="http://namespaces.plone.org/supermodel/lingua" xmlns:marshal="http://namespaces.plone.org/supermodel/marshal" xmlns:security="http://namespaces.plone.org/supermodel/security" xmlns:users="http://namespaces.plone.org/supermodel/users" xmlns="http://namespaces.plone.org/supermodel/schema"&gt;
     &lt;schema&gt;
       &lt;field name="return_data" type="plone.namedfile.field.NamedBlobFile"&gt;
         &lt;description&gt;Return page data in CSV format. One line per contest. Row one must be headers.&lt;/description&gt;
         &lt;title&gt;Return data&lt;/title&gt;
+      &lt;/field&gt;
+      &lt;field name="show_all_zeros" type="zope.schema.Bool"&gt;
+        &lt;description&gt;Show zeros for all numbers and percentages&lt;/description&gt;
+        &lt;required&gt;False&lt;/required&gt;
+        &lt;default&gt;False&lt;/default&gt;
+        &lt;title&gt;Show all zeros&lt;/title&gt;
+        &lt;form:widget type="z3c.form.browser.radio.RadioFieldWidget"/&gt;
       &lt;/field&gt;
       &lt;field name="body" type="plone.app.textfield.RichText"&gt;
         &lt;description&gt;Additional information, shown on page.&lt;/description&gt;
         &lt;title&gt;Body Text&lt;/title&gt;
       &lt;/field&gt;
       &lt;field name="show_turnout" type="zope.schema.Bool"&gt;
+        &lt;default&gt;True&lt;/default&gt;
         &lt;description&gt;Should we report turnout figures and percentages?&lt;/description&gt;
         &lt;required&gt;False&lt;/required&gt;
-        &lt;default&gt;True&lt;/default&gt;
         &lt;title&gt;Show Turnout&lt;/title&gt;
         &lt;form:widget type="z3c.form.browser.radio.RadioFieldWidget"/&gt;
+      &lt;/field&gt;
+      &lt;field name="title_fixups" type="zope.schema.Text"&gt;
+        &lt;description&gt;Search/Replace pairs for title fixups. One line per pair, use '|' to separate search/replace elements. E.G., "3Rd|3rd"&lt;/description&gt;
+        &lt;required&gt;False&lt;/required&gt;
+        &lt;title&gt;Title Fixups&lt;/title&gt;
+      &lt;/field&gt;
+      &lt;field name="contests_to_include" type="zope.schema.TextLine"&gt;
+        &lt;description&gt;Numbers for contests to include, separated by spaces. Leave empty to include all contests.&lt;/description&gt;
+        &lt;required&gt;False&lt;/required&gt;
+        &lt;title&gt;Contests to include&lt;/title&gt;
+      &lt;/field&gt;
+      &lt;field name="contests_to_exclude" type="zope.schema.TextLine"&gt;
+        &lt;description&gt;Numbers for contests to exclude, entered as a space-delimited lists. Exclusions are processed after inclusions.&lt;/description&gt;
+        &lt;required&gt;False&lt;/required&gt;
+        &lt;title&gt;Contests to exclude&lt;/title&gt;
       &lt;/field&gt;
     &lt;/schema&gt;
   &lt;/model&gt;</property>

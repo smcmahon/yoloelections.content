@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from plone.i18n.normalizer import idnormalizer
 # from plone.memoize import ram
 from Products.Five import BrowserView
 # from time import time
@@ -8,207 +7,133 @@ from Products.Five import BrowserView
 import csv
 import cStringIO
 
-# column headers mapped to field keys
-fields = {
-    'Page': 'page',
-    'Contest #': 'contest',
-    'Contest Name': 'contest_name',
-    'Cadn/choice name': 'choice_name',
-    'PARTY': 'party',
-    'RANK': 'rank',
-    'cont code': None,
-    'choice code': None,
-    'options': 'options',
-    'ballots cast': 'ballots_cast',
-    'votes': 'votes',
-    'precincts ': 'precincts',
-    'prec reporting': 'prec_reporting',
-    'VOTE W TIEBREAKER': 'vote_tiebreaker',
-    'tot reg': 'total_reg',
-    'turnout reg': 'turnout_reg',
-}
-# These fields get converted to integers
-int_fields = [
-    'contest',
-    'rank',
-    'ballots_cast',
-    'options',
-    'votes',
-    'precincts',
-    'prec_reporting',
-    'total_reg',
-    'turnout_reg',
-]
-# These fields get converted to floats
-float_fields = [
-    'vote_tiebreaker',
-]
-# sort hierarchy
-sort_order = (
-    'page',
-    'contest',
-    'rank',
-)
+
+csv_dialect = 'excel'
+csv_charset = 'utf8'
+csv_skipbytes = 3
+csv_skiprows = 1
+
+col_contest_number = 5
+col_contest_title = 0
+col_choice_title = 13
+col_choice_party = 14
+col_precincts_reporting = 2
+col_precincts_total = 3
+col_precincts_percent = 4
+col_choice_votes = 25
+col_choice_percent = 26
+col_cast_votes = 37
+col_cast_votes_percent = 38
+
 # corrections for string.title results
-title_fixups = (
-    (' The ', ' the '),
-    (' A ', ' a '),
-    (' Of ', ' of '),
-    ('1St ', '1st '),
-    ('2Nd ', '2nd '),
-    ('3Rd ', '3rd '),
-    ('4Th ', '4th '),
-    ('5Th ', '5th '),
-    ('6Th ', '6th '),
-    ('7Th ', '7th '),
-    ('8Th ', '8th '),
-    ('Usd', 'USD'),
-    ('Jusd', 'JUSD'),
-    ('Djusd', 'DJUSD'),
-    ('Ws ', 'WS '),
-    ('Us ', 'US '),
+title_fixup_pairs = (
+    (u' The ', u' the '),
+    (u' A ', u' a '),
+    (u' Of ', u' of '),
+    (u'1St ', u'1st '),
+    (u'2Nd ', u'2nd '),
+    (u'3Rd ', u'3rd '),
+    (u'4Th ', u'4th '),
+    (u'5Th ', u'5th '),
+    (u'6Th ', u'6th '),
+    (u'7Th ', u'7th '),
+    (u'8Th ', u'8th '),
+    (u'Usd', u'USD'),
+    (u'Jusd', u'JUSD'),
+    (u'Djusd', u'DJUSD'),
+    (u'Ws ', u'WS '),
+    (u'Us ', u'US '),
+    (u'Iii', u'III')
 )
-
-
-def utf16Fix(data):
-    # if this looks like utf16, convert to utf8
-    if data[0] == '\xff':
-        return data.decode('utf16').encode('utf8')
-    return data
-
-
-def contest_cmp(a, b):
-    for crit in sort_order:
-        ccmp = cmp(a[crit], b[crit])
-        if ccmp:
-            return ccmp
-    return 0
-
-
-def commaize(anint):
-    """ return number formatted with thousand comma """
-    thou = anint / 1000
-    if thou:
-        return "%d,%03d" % (thou, anint % 1000)
-    else:
-        return "%d" % anint
-
-
-def entitle(contest):
-    # title case with fixups
-    contest = contest.title()
-    for s, r in title_fixups:
-        contest = contest.replace(s, r)
-    return contest
-
-
-def as_pct(num, denom):
-    if denom == 0:
-        return "0.0%"
-    return "{:0.1f}%".format(100.0 * num / denom)
 
 
 class ReturnPageView(BrowserView):
     """ support for return page template
         Parses the csv file in return_data,
-        returns a list of pages;
-        each page is a dict with keys:
-            page_title,
-            page_id,
-            contests
-        page_id is a normalized id created from the page title.
+        returns a list of contests;
         contests is a list of contest dicts:
-            contest_name,
-            precincts,
-            prec_reporting,
-            prec_percent, # computed and formatted
-            ballots_cast,
-            ballots_cast_rep, # commaized ballots_cast
+            contest_titles,
+            precincts_reporting,
+            precincts_total,
+            precincts_percent,
+            cast_votes,
+            cast_votes_percent,
             choices,
-            options,
-            total_votes # tabulated by us
-            total_reg,
-            turnout_pct,
         choices is a list of candidate/choice dicts:
-            choice_name,
-            party,
-            votes,
-            votes_rep,  # commaized
-            votes_pct,  # tabulated and formatted
-            ballot_pct, # tabulated and formatted
-            klass       # a css class used to highlight leaders.
+            choice_title,
+            choice_party,
+            choice_votes,
+            choice_percent,
     """
+
+    def entitle(self, contest):
+        # title case with fixups
+        # convert to unicode first to get good case transforms for extended charset
+        contest = contest.decode('utf8').title()
+        # built-in transforms
+        for s, r in title_fixup_pairs:
+            contest = contest.replace(s, r)
+        # transforms specified in the content item
+        for line in (getattr(self.context, 'title_fixups', '') or '').split(u'\n'):
+            pair = line.split(u'|')
+            if len(pair) > 1:
+                contest = contest.replace(pair[0], pair[1])
+        return contest
 
     # @ram.cache(lambda *args: time() // 60)
     def pages(self):
-        reader = csv.DictReader(
-            cStringIO.StringIO(utf16Fix(self.context.return_data.data)),
-            dialect='excel'
-        )
-
-        # parse the csv, sort it
-        rows = []
+        include_contests = set((getattr(self.context, 'contests_to_include', '') or '').split())
+        exclude_contests = set((getattr(self.context, 'contests_to_exclude', '') or '').split())
+        data = cStringIO.StringIO(self.context.return_data.data[csv_skipbytes:])
+        reader = csv.reader(data, dialect=csv_dialect)
+        rowcount = 0
+        last_contest_number = -1
+        contests = []
         for row in reader:
-            rez = {}
-            for akey in row.keys():
-                fixed_key = fields.get(akey)
-                if fixed_key is not None:
-                    if fixed_key in int_fields:
-                        rez[fixed_key] = int(row[akey])
-                    elif fixed_key in float_fields:
-                        rez[fixed_key] = float(row[akey])
-                    else:
-                        rez[fixed_key] = row[akey]
-            rows.append(rez)
-        rows.sort(contest_cmp)
-
-        # construct pages list
-        pages = []
-        last_page = ''
-        last_contest = 0
-        for row in rows:
-            page = row['page']
-            if page != last_page:
-                last_page = page
-                contests = []
-                pages.append(dict(
-                    page_title=entitle(page),
-                    page_id=idnormalizer.normalize(page),
-                    contests=contests,
+            rowcount += 1
+            if rowcount <= csv_skiprows:
+                continue
+            if len(row) == 0:
+                continue
+            contest_number = row[col_contest_number]
+            if include_contests and contest_number not in include_contests:
+                continue
+            if contest_number in exclude_contests:
+                continue
+            if contest_number != last_contest_number:
+                last_contest_number = contest_number
+                if self.context.show_all_zeros:
+                    contests.append(dict(
+                        contest_titles=self.entitle(row[col_contest_title]).split(' - '),
+                        precincts_reporting='0',
+                        precincts_total=row[col_precincts_total],
+                        precincts_percent='0.00',
+                        cast_votes='0',
+                        cast_votes_percent='0.00',
+                        choices=[],
+                    ))
+                else:
+                    contests.append(dict(
+                        contest_titles=self.entitle(row[col_contest_title]).split(' - '),
+                        precincts_reporting=row[col_precincts_reporting],
+                        precincts_total=row[col_precincts_total],
+                        precincts_percent=row[col_precincts_percent],
+                        cast_votes=row[col_cast_votes],
+                        cast_votes_percent=row[col_cast_votes_percent],
+                        choices=[],
+                    ))
+            if self.context.show_all_zeros:
+                contests[-1]['choices'].append(dict(
+                    choice_title=self.entitle(row[col_choice_title]),
+                    choice_party=row[col_choice_party],
+                    choice_votes='0',
+                    choice_percent='0.00',
                 ))
-            contest_no = row['contest']
-            if contest_no != last_contest:
-                last_contest = contest_no
-                this_contest = dict(
-                    contest_name=row['contest_name'],
-                    precincts=row['precincts'],
-                    prec_reporting=row['prec_reporting'],
-                    prec_percent=as_pct(row['prec_reporting'], row['precincts']),
-                    ballots_cast=row['ballots_cast'],
-                    ballots_cast_rep=commaize(row['ballots_cast']),
-                    choices=[],
-                    options=row['options'],
-                    multi_option=row['options'] > 1,
-                    total_votes=0,
-                    total_reg=commaize(row['total_reg']),
-                    turnout_pct=as_pct(row['ballots_cast'], row['total_reg'])
-                )
-                contests.append(this_contest)
-            this_contest['total_votes'] += row['votes']
-            this_contest['choices'].append(dict(
-                choice_name=row['choice_name'].title(),
-                party=row['party'],
-                votes=row['votes'],
-                votes_rep=commaize(row['votes']),
-                klass=row['ballots_cast'] and (row['options'] >= row['rank']) and 'leading' or None,
-            ))
-        # compute some percentages
-        for page in pages:
-            for contest in page['contests']:
-                total_votes = contest['total_votes']
-                ballots_cast = contest['ballots_cast']
-                for choice in contest['choices']:
-                    choice['vote_pct'] = as_pct(choice['votes'], total_votes)
-                    choice['ballot_pct'] = as_pct(choice['votes'], ballots_cast)
-
-        return pages
+            else:
+                contests[-1]['choices'].append(dict(
+                    choice_title=self.entitle(row[col_choice_title]),
+                    choice_party=row[col_choice_party],
+                    choice_votes=row[col_choice_votes],
+                    choice_percent=row[col_choice_percent],
+                ))
+        return contests
