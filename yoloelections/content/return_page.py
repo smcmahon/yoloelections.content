@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from plone.i18n.normalizer import idnormalizer
 # from plone.memoize import ram
 from Products.Five import BrowserView
 # from time import time
@@ -81,9 +82,9 @@ class ReturnPageView(BrowserView):
         return contest
 
     # @ram.cache(lambda *args: time() // 60)
-    def pages(self):
-        include_contests = set((getattr(self.context, 'contests_to_include', '') or '').split())
-        exclude_contests = set((getattr(self.context, 'contests_to_exclude', '') or '').split())
+    def contests(self):
+        # include_contests = set((getattr(self.context, 'contests_to_include', '') or '').split())
+        # exclude_contests = set((getattr(self.context, 'contests_to_exclude', '') or '').split())
         data = cStringIO.StringIO(self.context.return_data.data[csv_skipbytes:])
         reader = csv.reader(data, dialect=csv_dialect)
         rowcount = 0
@@ -96,15 +97,16 @@ class ReturnPageView(BrowserView):
             if len(row) == 0:
                 continue
             contest_number = row[col_contest_number]
-            if include_contests and contest_number not in include_contests:
-                continue
-            if contest_number in exclude_contests:
-                continue
+            # if include_contests and contest_number not in include_contests:
+            #     continue
+            # if contest_number in exclude_contests:
+            #     continue
             if contest_number != last_contest_number:
                 last_contest_number = contest_number
                 if self.context.show_all_zeros:
                     contests.append(dict(
                         contest_titles=self.entitle(row[col_contest_title]).split(' - '),
+                        contest_number=contest_number,
                         precincts_reporting='0',
                         precincts_total=row[col_precincts_total],
                         precincts_percent='0.00',
@@ -115,6 +117,7 @@ class ReturnPageView(BrowserView):
                 else:
                     contests.append(dict(
                         contest_titles=self.entitle(row[col_contest_title]).split(' - '),
+                        contest_number=contest_number,
                         precincts_reporting=row[col_precincts_reporting],
                         precincts_total=row[col_precincts_total],
                         precincts_percent=row[col_precincts_percent],
@@ -137,3 +140,36 @@ class ReturnPageView(BrowserView):
                     choice_percent=row[col_choice_percent],
                 ))
         return contests
+
+    def pages(self):
+        # paginated contests
+        # returns a list of pages;
+        # each page is a dict with keys:
+        #     page_title,
+        #     page_id,
+        #     contests
+        # page_id is a normalized id created from the page title.
+
+        contests = self.contests()
+        pagination = getattr(self.context, 'pagination', '') or ''
+        pagination = [s for s in [s.strip() for s in pagination.split('\n')] if s]
+
+        if len(pagination):
+            # create a dict of contests with the contest numbers as keys.
+            # contests_by_number = [(contest['contest_number'], contest) for contest in contests]
+            pages = []
+            for page in pagination:
+                page_title, contest_numbers = page.split('|')
+                contest_numbers = contest_numbers.split()
+                pages.append(dict(
+                    page_title=page_title,
+                    page_id=idnormalizer.normalize(page_title),
+                    contests=[contest for contest in contests if contest['contest_number'] in contest_numbers]
+                ))
+            return pages
+        else:
+            return [dict(
+                page_title="All",
+                page_id="all_contests",
+                contests=contests
+            )]

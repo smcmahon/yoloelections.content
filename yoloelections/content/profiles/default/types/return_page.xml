@@ -32,17 +32,17 @@
      value="plone.app.dexterity.behaviors.exclfromnav.IExcludeFromNavigation"/>
  </property>
  <property name="schema"></property>
- <property name="model_source">&lt;?xml version='1.0' encoding='utf8'?&gt;
-  &lt;model xmlns:form="http://namespaces.plone.org/supermodel/form" xmlns:i18n="http://xml.zope.org/namespaces/i18n" xmlns:indexer="http://namespaces.plone.org/supermodel/indexer" xmlns:lingua="http://namespaces.plone.org/supermodel/lingua" xmlns:marshal="http://namespaces.plone.org/supermodel/marshal" xmlns:security="http://namespaces.plone.org/supermodel/security" xmlns:users="http://namespaces.plone.org/supermodel/users" xmlns="http://namespaces.plone.org/supermodel/schema"&gt;
+ <property
+    name="model_source">&lt;model xmlns:form="http://namespaces.plone.org/supermodel/form" xmlns:i18n="http://xml.zope.org/namespaces/i18n" xmlns:indexer="http://namespaces.plone.org/supermodel/indexer" xmlns:lingua="http://namespaces.plone.org/supermodel/lingua" xmlns:marshal="http://namespaces.plone.org/supermodel/marshal" xmlns:security="http://namespaces.plone.org/supermodel/security" xmlns:users="http://namespaces.plone.org/supermodel/users" xmlns="http://namespaces.plone.org/supermodel/schema"&gt;
     &lt;schema&gt;
       &lt;field name="return_data" type="plone.namedfile.field.NamedBlobFile"&gt;
-        &lt;description&gt;Return page data in "cumulative" CSV format. One line per contest. Row one must be headers.&lt;/description&gt;
+        &lt;description&gt;Return page data in CSV format. One line per contest. Row one must be headers.&lt;/description&gt;
         &lt;title&gt;Return data&lt;/title&gt;
       &lt;/field&gt;
       &lt;field name="show_all_zeros" type="zope.schema.Bool"&gt;
+        &lt;default&gt;False&lt;/default&gt;
         &lt;description&gt;Show zeros for all numbers and percentages&lt;/description&gt;
         &lt;required&gt;False&lt;/required&gt;
-        &lt;default&gt;False&lt;/default&gt;
         &lt;title&gt;Show all zeros&lt;/title&gt;
         &lt;form:widget type="z3c.form.browser.radio.RadioFieldWidget"/&gt;
       &lt;/field&gt;
@@ -62,15 +62,11 @@
         &lt;required&gt;False&lt;/required&gt;
         &lt;title&gt;Title Fixups&lt;/title&gt;
       &lt;/field&gt;
-      &lt;field name="contests_to_include" type="zope.schema.TextLine"&gt;
-        &lt;description&gt;Numbers for contests to include, separated by spaces. Leave empty to include all contests.&lt;/description&gt;
+      &lt;field name="pagination" type="zope.schema.Text"&gt;
+        &lt;description&gt;Page/Contest list. Each line should be a page title, a "|" separator and a list of contest numbers to include on the page. Separate contest numbers with spaces.
+  If this field is empty, contests will be presented with no pagination in the order found in the import file.&lt;/description&gt;
         &lt;required&gt;False&lt;/required&gt;
-        &lt;title&gt;Contests to include&lt;/title&gt;
-      &lt;/field&gt;
-      &lt;field name="contests_to_exclude" type="zope.schema.TextLine"&gt;
-        &lt;description&gt;Numbers for contests to exclude, entered as a space-delimited lists. Exclusions are processed after inclusions.&lt;/description&gt;
-        &lt;required&gt;False&lt;/required&gt;
-        &lt;title&gt;Contests to exclude&lt;/title&gt;
+        &lt;title&gt;Pagination&lt;/title&gt;
       &lt;/field&gt;
     &lt;/schema&gt;
   &lt;/model&gt;</property>
