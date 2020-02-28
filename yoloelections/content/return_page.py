@@ -88,21 +88,23 @@ class ReturnPageView(BrowserView):
         data = cStringIO.StringIO(self.context.return_data.data[csv_skipbytes:])
         reader = csv.reader(data, dialect=csv_dialect)
         rowcount = 0
-        last_contest_number = -1
+        last_contest_title = ''
         contests = []
+        contest_number = 0
         for row in reader:
             rowcount += 1
             if rowcount <= csv_skiprows:
                 continue
             if len(row) == 0:
                 continue
-            contest_number = row[col_contest_number]
+            contest_title = row[col_contest_title]
             # if include_contests and contest_number not in include_contests:
             #     continue
             # if contest_number in exclude_contests:
             #     continue
-            if contest_number != last_contest_number:
-                last_contest_number = contest_number
+            if contest_title != last_contest_title:
+                last_contest_title = contest_title
+                contest_number += 1
                 if self.context.show_all_zeros:
                     contests.append(dict(
                         contest_titles=self.entitle(row[col_contest_title]).split(' - '),
@@ -160,7 +162,7 @@ class ReturnPageView(BrowserView):
             pages = []
             for page in pagination:
                 page_title, contest_numbers = page.split('|')
-                contest_numbers = contest_numbers.split()
+                contest_numbers = [int(i) for i in contest_numbers.split()]
                 pages.append(dict(
                     page_title=page_title,
                     page_id=idnormalizer.normalize(page_title),
