@@ -83,8 +83,6 @@ class ReturnPageView(BrowserView):
 
     # @ram.cache(lambda *args: time() // 60)
     def contests(self):
-        # include_contests = set((getattr(self.context, 'contests_to_include', '') or '').split())
-        # exclude_contests = set((getattr(self.context, 'contests_to_exclude', '') or '').split())
         data = cStringIO.StringIO(self.context.return_data.data[csv_skipbytes:])
         reader = csv.reader(data, dialect=csv_dialect)
         rowcount = 0
@@ -98,10 +96,6 @@ class ReturnPageView(BrowserView):
             if len(row) == 0:
                 continue
             contest_title = row[col_contest_title]
-            # if include_contests and contest_number not in include_contests:
-            #     continue
-            # if contest_number in exclude_contests:
-            #     continue
             if contest_title != last_contest_title:
                 last_contest_title = contest_title
                 contest_number += 1
