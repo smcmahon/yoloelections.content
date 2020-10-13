@@ -16,15 +16,15 @@ csv_skiprows = 1
 
 col_contest_number = 5
 col_contest_title = 0
-col_choice_title = 11
-col_choice_party = 12
+col_choice_title = 13
+col_choice_party = 14
 col_precincts_reporting = 2
 col_precincts_total = 3
 col_precincts_percent = 4
-col_choice_votes = 19
-col_choice_percent = 20
-col_cast_votes = 27
-col_cast_votes_percent = 28
+col_choice_votes = 25
+col_choice_percent = 26
+col_cast_votes = 37
+col_cast_votes_percent = 38
 
 # corrections for string.title results
 title_fixup_pairs = (

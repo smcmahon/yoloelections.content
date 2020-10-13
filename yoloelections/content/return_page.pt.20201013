@@ -30,10 +30,6 @@ table.return tr.leading {
 }
 .collapse {display:none}
 .collapse.in {display:block}
-tr.contest_total,
-table.return tbody {
-  border-top: outset;
-}
 @media (max-width: 767px) {
     table.return {
         width: 100%;
@@ -103,11 +99,11 @@ jQuery(function($) {
                         </thead>
                         <tbody>
                             <tr tal:repeat="choice contest/choices" tal:attributes="class choice/klass | nothing">
-                                <td><span tal:replace="choice/choice_title" /> <span tal:condition="choice/choice_party">(<span tal:content="choice/choice_party" />)</span></td>
+                                <td><span tal:replace="choice/choice_title" /> <span tal:condition="choice/choice_party">(<span tal:content="choice/party" />)</span></td>
                                 <td tal:content="choice/choice_votes" />
                                 <td tal:content="choice/choice_percent" />
                             </tr>
-                            <tr class="contest_total">
+                            <tr>
                                 <td>Total Votes</td>
                                 <td tal:content="contest/cast_votes" />
                                 <td tal:content="contest/cast_votes_percent" />
