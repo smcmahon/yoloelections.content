@@ -34,13 +34,16 @@ tr.contest_total,
 table.return tbody {
   border-top: outset;
 }
+#return_pages button {
+    margin-bottom: 0.25em;
+}
 @media (max-width: 767px) {
     table.return {
         width: 100%;
     }
     #return_pages button {
         width: 100%;
-        margin: 0.25em 0;
+        margin: 0.2em 0;
     }
 }
 .hidden_number {display:none}

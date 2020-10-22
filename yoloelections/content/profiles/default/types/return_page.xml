@@ -50,12 +50,20 @@
         &lt;description&gt;Additional information, shown on page.&lt;/description&gt;
         &lt;title&gt;Body Text&lt;/title&gt;
       &lt;/field&gt;
-      &lt;field name="show_turnout" type="zope.schema.Bool"&gt;
-        &lt;default&gt;True&lt;/default&gt;
-        &lt;description&gt;Should we report turnout figures and percentages?&lt;/description&gt;
+      &lt;field name="column_map" type="zope.schema.Text"&gt;
+        &lt;description&gt;Map connecting column titles in data first row with variables in output pages. Each line should have the format "variable_name|column_title".&lt;/description&gt;
         &lt;required&gt;False&lt;/required&gt;
-        &lt;title&gt;Show Turnout&lt;/title&gt;
-        &lt;form:widget type="z3c.form.browser.radio.RadioFieldWidget"/&gt;
+        &lt;title&gt;Column Map&lt;/title&gt;
+        &lt;default&gt;contest_title|tbContestName
+choice_title|ChoiceName
+choice_party|ChoicePartyNames
+precincts_reporting|NumberReporting
+precincts_total|NumberTotal
+precincts_percent|PercentageReporting
+choice_votes|Textbox46
+choice_percent|Textbox54
+cast_votes|Textbox47
+cast_votes_percent|Textbox55&lt;/default&gt;
       &lt;/field&gt;
       &lt;field name="title_fixups" type="zope.schema.Text"&gt;
         &lt;description&gt;Search/Replace pairs for title fixups. One line per pair, use '|' to separate search/replace elements. E.G., "3Rd|3rd"&lt;/description&gt;

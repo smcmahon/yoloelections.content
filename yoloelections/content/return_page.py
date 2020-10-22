@@ -14,17 +14,20 @@ csv_charset = 'utf8'
 csv_skipbytes = 3
 csv_skiprows = 1
 
-col_contest_number = 5
-col_contest_title = 0
-col_choice_title = 11
-col_choice_party = 12
-col_precincts_reporting = 2
-col_precincts_total = 3
-col_precincts_percent = 4
-col_choice_votes = 19
-col_choice_percent = 20
-col_cast_votes = 27
-col_cast_votes_percent = 28
+required_variables = (
+    "contest_title",
+    "choice_title",
+    "choice_party",
+    "precincts_reporting",
+    "precincts_total",
+    "precincts_percent",
+    "choice_votes",
+    "choice_percent",
+    "cast_votes",
+    "cast_votes_percent",
+)
+
+BAD_COLMAP = 1000
 
 # corrections for string.title results
 title_fixup_pairs = (
@@ -81,6 +84,16 @@ class ReturnPageView(BrowserView):
                 contest = contest.replace(pair[0], pair[1])
         return contest
 
+    def getColumnMap(self):
+        # get a dictionary from the context that maps column titles to variable names
+        column_map = {}
+        rows = getattr(self.context, 'column_map', '').split(u"\n")
+        for row in rows:
+            mapping = row.strip().split(u'|')
+            if len(mapping) == 2:
+                column_map[mapping[0]] = mapping[1]
+        return column_map
+
     # @ram.cache(lambda *args: time() // 60)
     def contests(self):
         data = cStringIO.StringIO(self.context.return_data.data[csv_skipbytes:])
@@ -89,22 +102,43 @@ class ReturnPageView(BrowserView):
         last_contest_title = ''
         contests = []
         contest_number = 0
+        var_indices = {}
+        column_map = self.getColumnMap()
+
+        def getValueFromRow(row, var_name):
+            idx = var_indices.get(var_name)
+            if idx == BAD_COLMAP:
+                return "Missing from column map: {}".format(var_name)
+            return row[idx]
+
         for row in reader:
             rowcount += 1
-            if rowcount <= csv_skiprows:
+            if rowcount == 1:
+                # this row is the column titles;
+                # construct a mapping of column titles to column numbers
+                for var_name in required_variables:
+                    try:
+                        # look up the column title in our column_map;
+                        # find the column title index in our title row
+                        var_indices[var_name] = row.index(column_map.get(var_name, u'missing column'))
+                    except ValueError:
+                        # we couldn't find the column title;
+                        # prepare to register a complaint when we're asked for this value.
+                        var_indices[var_name] = BAD_COLMAP
+                # print var_indices
                 continue
             if len(row) == 0:
                 continue
-            contest_title = row[col_contest_title]
+            contest_title = getValueFromRow(row, 'contest_title')
             if contest_title != last_contest_title:
                 last_contest_title = contest_title
                 contest_number += 1
                 if self.context.show_all_zeros:
                     contests.append(dict(
-                        contest_titles=self.entitle(row[col_contest_title]).split(' - '),
+                        contest_titles=self.entitle(getValueFromRow(row, 'contest_title')).split(' - '),
                         contest_number=contest_number,
                         precincts_reporting='0',
-                        precincts_total=row[col_precincts_total],
+                        precincts_total=getValueFromRow(row, 'precincts_total'),
                         precincts_percent='0.00',
                         cast_votes='0',
                         cast_votes_percent='0.00',
@@ -112,28 +146,28 @@ class ReturnPageView(BrowserView):
                     ))
                 else:
                     contests.append(dict(
-                        contest_titles=self.entitle(row[col_contest_title]).split(' - '),
+                        contest_titles=self.entitle(getValueFromRow(row, 'contest_title')).split(' - '),
                         contest_number=contest_number,
-                        precincts_reporting=row[col_precincts_reporting],
-                        precincts_total=row[col_precincts_total],
-                        precincts_percent=row[col_precincts_percent],
-                        cast_votes=row[col_cast_votes],
-                        cast_votes_percent=row[col_cast_votes_percent],
+                        precincts_reporting=getValueFromRow(row, 'precincts_reporting'),
+                        precincts_total=getValueFromRow(row, 'precincts_total'),
+                        precincts_percent=getValueFromRow(row, 'precincts_percent'),
+                        cast_votes=getValueFromRow(row, 'cast_votes'),
+                        cast_votes_percent=getValueFromRow(row, 'cast_votes_percent'),
                         choices=[],
                     ))
             if self.context.show_all_zeros:
                 contests[-1]['choices'].append(dict(
-                    choice_title=self.entitle(row[col_choice_title]),
-                    choice_party=row[col_choice_party],
+                    choice_title=self.entitle(getValueFromRow(row, 'choice_title')),
+                    choice_party=getValueFromRow(row, 'choice_party'),
                     choice_votes='0',
                     choice_percent='0.00',
                 ))
             else:
                 contests[-1]['choices'].append(dict(
-                    choice_title=self.entitle(row[col_choice_title]),
-                    choice_party=row[col_choice_party],
-                    choice_votes=row[col_choice_votes],
-                    choice_percent=row[col_choice_percent],
+                    choice_title=self.entitle(getValueFromRow(row, 'choice_title')),
+                    choice_party=getValueFromRow(row, 'choice_party'),
+                    choice_votes=getValueFromRow(row, 'choice_votes'),
+                    choice_percent=getValueFromRow(row, 'choice_percent'),
                 ))
         return contests
 
