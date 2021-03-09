@@ -53,10 +53,16 @@ class FilingsView(BrowserView):
     """ support for filings template """
 
     def getFilings(self):
+        target_path = '/'.join(self.context.getPhysicalPath())
         catalog = getToolByName(self.context, 'portal_catalog')
         results = []
-        for rez in catalog(object_provides=ICandidateFiling.__identifier__, review_state="published"):
-            results.append(rez.getObject())
+        matches = catalog(
+            object_provides=ICandidateFiling.__identifier__,
+            review_state="published",
+            path=target_path
+        )
+        for rez in matches:
+                results.append(rez.getObject())
         results.sort(compareFilings)
         categories = []
         last_cat = None
