@@ -10,6 +10,33 @@
 <metal:content-core fill-slot="content-core" tal:define="ts context/translation_service">
     <metal:content-core define-macro="content-core">
 
+<style>
+table.return {
+    width: 50%;
+    margin: 2em auto 1em 0;
+}
+table.return th, table.return td {
+    text-align: right;
+    padding: 0.25em 0.5em;
+}
+table.return th:first-child {
+    text-align: center;
+}
+table.return td:first-child {
+    text-align: left;
+    font-weight: bold;
+}
+table.return tr.leading {
+    background-color: rgba(255, 255, 0, 0.1);
+}
+@media (max-width: 767px) {
+    table.return {
+        width: 100%;
+    }
+}
+.hidden_number {display:none}
+</style>
+
     <p class="documentDescription">
         <span tal:replace="context/district" />;
         <span tal:replace="python:context.edate.strftime('%B %d, %Y').replace(' 0', ' ')" />
