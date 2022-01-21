@@ -33,12 +33,12 @@
     name="model_source">&lt;model xmlns:form="http://namespaces.plone.org/supermodel/form" xmlns:marshal="http://namespaces.plone.org/supermodel/marshal" xmlns:security="http://namespaces.plone.org/supermodel/security" xmlns="http://namespaces.plone.org/supermodel/schema"&gt;
     &lt;schema&gt;
       &lt;field name="offices" type="zope.schema.Text"&gt;
-        &lt;description&gt;Format for entry: Category | Office. One office per line.&lt;/description&gt;
+        &lt;description&gt;Format for entry: Category | Office. One office per line. Duplicates are not allowed.&lt;/description&gt;
         &lt;required&gt;False&lt;/required&gt;
         &lt;title&gt;Offices&lt;/title&gt;
       &lt;/field&gt;
       &lt;field name="parties" type="zope.schema.Text"&gt;
-        &lt;description&gt;Valid parties&lt;/description&gt;
+        &lt;description&gt;Valid parties. Duplicates are not allowed.&lt;/description&gt;
         &lt;title&gt;Parties&lt;/title&gt;
       &lt;/field&gt;
     &lt;/schema&gt;
