@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from copy import deepcopy
 from interfaces import ICandidateFiling
 from Products.CMFCore.utils import getToolByName
 from Products.Five import BrowserView
@@ -17,7 +18,14 @@ def officeVocabulary(context):
             offices = [s.strip() for s in offices.split('\n')]
             offices.sort()
             for office in offices:
+                # Guard against accidental duplicates which are not allowed
+                # by SimpleVocabulary
+                old_terms = deepcopy(terms)
                 terms.append(SimpleTerm(value=office, token=len(terms), title=office))
+                try:
+                    dummy = SimpleVocabulary(terms)
+                except ValueError:
+                    terms = old_terms
             break
         context = getattr(context, 'aq_parent', None)
     return SimpleVocabulary(terms)
@@ -32,7 +40,14 @@ def partiesVocabulary(context):
             parties = [s.strip() for s in parties.split('\n')]
             parties.sort()
             for party in parties:
+                # Guard against accidental duplicates which are not allowed
+                # by SimpleVocabulary
+                old_terms = deepcopy(terms)
                 terms.append(SimpleTerm(value=party, token=len(terms), title=party))
+                try:
+                    dummy = SimpleVocabulary(terms)
+                except ValueError:
+                    terms = old_terms
             break
         context = getattr(context, 'aq_parent', None)
     return SimpleVocabulary(terms)
