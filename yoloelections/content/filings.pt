@@ -45,13 +45,13 @@
         <table class="cfilings" tal:define="toLocalizedTime nocall: context/@@plone/toLocalizedTime;">
             <tal:cblock tal:repeat="category view/getFilings">
                 <tr class="category">
-                    <th colspan="8">
+                    <th colspan="9">
                         <h2 tal:content="python:category[0]" />
                     </th>
                 </tr>
                 <tal:oblock tal:repeat="office python:category[1]">
                     <tr class="office">
-                        <th colspan="8">
+                        <th colspan="9">
                             <h3 tal:content="python:office[0]" />
                         </th>
                     </tr>
