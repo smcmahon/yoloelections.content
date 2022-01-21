@@ -32,6 +32,13 @@
         &lt;description/&gt;
         &lt;title&gt;Candidate Name&lt;/title&gt;
       &lt;/field&gt;
+      &lt;field name="incumbent" type="zope.schema.Bool"&gt;
+        &lt;default&gt;False&lt;/default&gt;
+        &lt;description&gt;Is this candidate the imcumbent for this office?&lt;/description&gt;
+        &lt;required&gt;False&lt;/required&gt;
+        &lt;title&gt;Incumbent&lt;/title&gt;
+        &lt;form:widget type="z3c.form.browser.radio.RadioFieldWidget"/&gt;
+      &lt;/field&gt;
       &lt;field name="office" type="zope.schema.Choice"&gt;
         &lt;description&gt;To create a new office, choose "New Office and enter a  category and office name.&lt;/description&gt;
         &lt;title&gt;Office&lt;/title&gt;
@@ -97,7 +104,7 @@
           &lt;element&gt;San Benito&lt;/element&gt;
           &lt;element&gt;San Bernardino&lt;/element&gt;
           &lt;element&gt;San Diego&lt;/element&gt;
-          &lt;element&gt;City and&lt;/element&gt;
+          &lt;element&gt;City and County of San Francisco&lt;/element&gt;
           &lt;element&gt;San Joaquin&lt;/element&gt;
           &lt;element&gt;San Luis Obispo&lt;/element&gt;
           &lt;element&gt;San Mateo&lt;/element&gt;
