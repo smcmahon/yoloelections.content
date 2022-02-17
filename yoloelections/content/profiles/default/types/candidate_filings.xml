@@ -27,6 +27,7 @@
   <element value="plone.app.content.interfaces.INameFromTitle"/>
   <element value="plone.app.dexterity.behaviors.metadata.IBasic"/>
   <element value="plone.app.dexterity.behaviors.metadata.IPublication"/>
+  <element value="plone.excludefromnavigation"/>
  </property>
  <property name="schema"></property>
  <property
