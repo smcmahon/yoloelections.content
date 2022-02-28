@@ -36,7 +36,7 @@ jQuery(function ($) {
         }
     }
 
-    if ($("body.template-candidate_filing").length) {
+    if ($("#form-widgets-office").length) {
         setOffice();
         $("#form-widgets-office").change(function () {
             setOffice();
