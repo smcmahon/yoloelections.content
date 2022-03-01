@@ -162,6 +162,7 @@
         &lt;description/&gt;
         &lt;required&gt;False&lt;/required&gt;
         &lt;title&gt;Candidate Statement of Qualifications Filed&lt;/title&gt;
+        &lt;required&gt;False&lt;/required&gt;
       &lt;/field&gt;
       &lt;field name="campaign_code" type="zope.schema.Choice"&gt;
         &lt;default&gt;Not Specified&lt;/default&gt;
