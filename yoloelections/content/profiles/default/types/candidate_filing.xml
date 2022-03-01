@@ -48,6 +48,7 @@
       &lt;field name="office_name_misc" type="zope.schema.TextLine"&gt;
         &lt;description&gt;This value will be displayed after the Office Name. Examples for use are &quot;Extension/No Extension&quot; and &quot;Election/No Election&quot; This must be specified for the first candidate listed for an office. Entries for subsequent candidates will be ignored.&lt;/description&gt;
         &lt;title&gt;Office Name Miscellany&lt;/title&gt;
+        &lt;required&gt;False&lt;/required&gt;
       &lt;/field&gt;
       &lt;field name="sort_as" type="zope.schema.TextLine"&gt;
         &lt;description&gt;The candidate listing will use this value to sort candidate items. Items without a value will sort after all items with &quot;Sort As&quot; entries and will be in office/candidate-name order.&lt;/description&gt;
