@@ -54,6 +54,19 @@ def partiesVocabulary(context):
 
 
 def compareFilings(a, b):
+    asa = getattr(a, 'sort_as', None)
+    bsa = getattr(b, 'sort_as', None)
+    if asa is not None:
+        if bsa is not None:
+            # print asa, bsa,
+            # print cmp(asa.strip().lower(), bsa.strip().lower())
+            return cmp(asa.strip().lower(), bsa.strip().lower())
+        else:
+            # print asa, 'bsa missing', -1
+            return -1
+    if bsa is not None:
+        # print bsa, 'asa missing', 1
+        return 1
     ao = a.office.lower()
     bo = b.office.lower()
     if ao > bo:
@@ -90,7 +103,11 @@ class FilingsView(BrowserView):
                 last_office = None
             if rez.office_name != last_office:
                 last_office = rez.office_name
+                s = last_office
+                office_name_misc = getattr(rez, 'office_name_misc', None)
+                if office_name_misc is not None:
+                    s = '%s (%s)' % (s, office_name_misc)
                 candidates = []
-                offices.append((last_office, candidates))
+                offices.append((s, candidates))
             candidates.append(rez)
         return categories

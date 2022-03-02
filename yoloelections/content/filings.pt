@@ -45,13 +45,13 @@
         <table class="cfilings" tal:define="toLocalizedTime nocall: context/@@plone/toLocalizedTime;">
             <tal:cblock tal:repeat="category view/getFilings">
                 <tr class="category">
-                    <th colspan="9">
+                    <th colspan="12">
                         <h2 tal:content="python:category[0]" />
                     </th>
                 </tr>
                 <tal:oblock tal:repeat="office python:category[1]">
                     <tr class="office">
-                        <th colspan="9">
+                        <th colspan="12">
                             <h3 tal:content="python:office[0]" />
                         </th>
                     </tr>
@@ -63,6 +63,9 @@
                           <td><small>In Lieu Sigs&nbsp;</small></td>
                           <td colspan="2" style="text-align:center"><small>Nomination Papers&nbsp;</small></td>
                           <td><small>Dec. of Candidacy&nbsp;</small></td>
+                          <td><small>Statement of Qualifications&nbsp;</small></td>
+                          <td><small>Code of Fair Campaign Practices?</small></td>
+                          <td><small>Qualified for Ballot?</small></td>
                           <td><small>Misc.</small></td>
                     </tr>
                     <tr class="headers" style="font-size:80%; line-height:100%">
@@ -74,6 +77,9 @@
                       <td><small>Date Taken&nbsp;</small></td>
                       <td><small>Date Filed&nbsp;</small></td>
                       <td><small>Date Filed&nbsp;</small></td>
+                      <td><small>Date Filed&nbsp;</small></td>
+                      <td>&nbsp;</td>
+                      <td>&nbsp;</td>
                       <td>&nbsp;</td>
                     </tr>
                     <tr class="candidate" tal:repeat="candidate python:office[1]">
@@ -109,10 +115,16 @@
                             tal:condition="candidate/nom_papers_filed"
                             tal:content="python:candidate.nom_papers_filed.strftime('%m/%d')"
 			    /></td>
-		    <td><span
+            <td><span
                             tal:condition="candidate/doc_filed"
                             tal:content="python:candidate.doc_filed.strftime('%m/%d')"
-			    /></td>
+                /></td>
+            <td><span
+                            tal:condition="candidate/qual_filed"
+                            tal:content="python:candidate.qual_filed.strftime('%m/%d')"
+                /></td>
+                        <td tal:content="candidate/campaign_code" />
+                        <td tal:content="candidate/ballot_qualified" />
                         <td tal:content="candidate/miscellaneous" />
                     </tr>
                 </tal:oblock>
