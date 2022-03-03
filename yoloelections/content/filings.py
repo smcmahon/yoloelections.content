@@ -53,28 +53,23 @@ def partiesVocabulary(context):
     return SimpleVocabulary(terms)
 
 
+def striplowcmp(a, b):
+    return cmp(a.strip().lower(), b.strip().lower())
+
+
 def compareFilings(a, b):
-    asa = getattr(a, 'sort_as', None)
-    bsa = getattr(b, 'sort_as', None)
-    if asa is not None:
-        if bsa is not None:
-            # print asa, bsa,
-            # print cmp(asa.strip().lower(), bsa.strip().lower())
-            return cmp(asa.strip().lower(), bsa.strip().lower())
-        else:
-            # print asa, 'bsa missing', -1
-            return -1
-    if bsa is not None:
-        # print bsa, 'asa missing', 1
-        return 1
-    ao = a.office.lower()
-    bo = b.office.lower()
-    if ao > bo:
-        return 1
-    elif ao < bo:
+    asa = (getattr(a, 'sort_as', None) or '').strip()
+    bsa = (getattr(b, 'sort_as', None) or '').strip()
+    if asa:
+        if bsa:
+            return striplowcmp(asa, bsa)
         return -1
-    else:
-        return cmp(a.title, b.title)
+    if bsa:
+        return 1
+    rez = striplowcmp(a.office, b.office)
+    if rez == 0:
+        return striplowcmp(a.title, b.title)
+    return rez
 
 
 class FilingsView(BrowserView):

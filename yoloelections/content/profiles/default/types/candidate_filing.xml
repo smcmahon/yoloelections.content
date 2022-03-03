@@ -165,11 +165,11 @@
         &lt;required&gt;False&lt;/required&gt;
       &lt;/field&gt;
       &lt;field name="campaign_code" type="zope.schema.Choice"&gt;
-        &lt;default&gt;Not Specified&lt;/default&gt;
+        &lt;default&gt;Pending&lt;/default&gt;
         &lt;title&gt;Code of Fair Campaign Practices?&lt;/title&gt;
         &lt;required&gt;False&lt;/required&gt;
         &lt;values&gt;
-          &lt;element&gt;Not Specified&lt;/element&gt;
+          &lt;element&gt;Pending&lt;/element&gt;
           &lt;element&gt;Yes&lt;/element&gt;
           &lt;element&gt;No&lt;/element&gt;
         &lt;/values&gt;
