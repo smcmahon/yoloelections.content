@@ -170,8 +170,8 @@
         &lt;required&gt;False&lt;/required&gt;
         &lt;values&gt;
           &lt;element&gt;Pending&lt;/element&gt;
-          &lt;element&gt;Yes&lt;/element&gt;
-          &lt;element&gt;No&lt;/element&gt;
+          &lt;element&gt;Accepted&lt;/element&gt;
+          &lt;element&gt;Declined&lt;/element&gt;
         &lt;/values&gt;
       &lt;/field&gt;
       &lt;field name="ballot_qualified" type="zope.schema.Choice"&gt;
