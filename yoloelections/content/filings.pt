@@ -103,27 +103,33 @@
                         <td tal:content="python:candidate.incumbent and 'Yes' or 'No'" />
                         <td tal:content="python:candidate.party or 'n/a'" />
                         <td tal:content="candidate/county_of_residence" />
-			    <td><span
-			    tal:condition="candidate/sig_in_lieu_filed"
-                            tal:content="python:candidate.sig_in_lieu_filed.strftime('%m/%d')"
-			    /></td>
-		    <td><span
-                            tal:condition="candidate/nom_papers_taken"
-                            tal:content="python:candidate.nom_papers_taken.strftime('%m/%d')"
-			    /></td>
-		    <td><span
-                            tal:condition="candidate/nom_papers_filed"
-                            tal:content="python:candidate.nom_papers_filed.strftime('%m/%d')"
-			    /></td>
-            <td><span
-                            tal:condition="candidate/doc_filed"
-                            tal:content="python:candidate.doc_filed.strftime('%m/%d')"
-                /></td>
-            <td><span
-                            tal:condition="candidate/qual_filed"
-                            tal:content="python:candidate.qual_filed.strftime('%m/%d')"
-                /></td>
-                        <td tal:content="candidate/campaign_code" />
+              			    <td><span
+              			    tal:condition="candidate/sig_in_lieu_filed"
+                                          tal:content="python:candidate.sig_in_lieu_filed.strftime('%m/%d')"
+              			    /></td>
+                		    <td><span
+                                            tal:condition="candidate/nom_papers_taken"
+                                            tal:content="python:candidate.nom_papers_taken.strftime('%m/%d')"
+                			    /></td>
+                		    <td><span
+                                            tal:condition="candidate/nom_papers_filed"
+                                            tal:content="python:candidate.nom_papers_filed.strftime('%m/%d')"
+                			    /></td>
+                        <td><span
+                                        tal:condition="candidate/doc_filed"
+                                        tal:content="python:candidate.doc_filed.strftime('%m/%d')"
+                            /></td>
+                        <td><span
+                                        tal:condition="candidate/qual_filed"
+                                        tal:content="python:candidate.qual_filed.strftime('%m/%d')"
+                            /></td>
+                        <td tal:define="code candidate/campaign_code">
+                          <span tal:content="python:
+                            (code == 'Yes' and 'Accepted') or
+                            (code == 'No' and 'Declined') or
+                            code
+                          " />
+                        </td>
                         <td tal:content="candidate/ballot_qualified" />
                         <td tal:content="candidate/miscellaneous" />
                     </tr>

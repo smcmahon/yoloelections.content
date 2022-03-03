@@ -167,7 +167,6 @@
       &lt;field name="campaign_code" type="zope.schema.Choice"&gt;
         &lt;default&gt;Pending&lt;/default&gt;
         &lt;title&gt;Code of Fair Campaign Practices?&lt;/title&gt;
-        &lt;required&gt;False&lt;/required&gt;
         &lt;values&gt;
           &lt;element&gt;Pending&lt;/element&gt;
           &lt;element&gt;Accepted&lt;/element&gt;
@@ -177,7 +176,6 @@
       &lt;field name="ballot_qualified" type="zope.schema.Choice"&gt;
         &lt;default&gt;Pending&lt;/default&gt;
         &lt;title&gt;Qualified for Ballot?&lt;/title&gt;
-        &lt;required&gt;False&lt;/required&gt;
         &lt;values&gt;
           &lt;element&gt;Pending&lt;/element&gt;
           &lt;element&gt;Yes&lt;/element&gt;
